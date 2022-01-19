@@ -19,8 +19,11 @@ jobs:
       with:
         dotnet-version: 6.0.x
         
-    - name: Restore dependencies
+    - name: Install build tools
       run: dotnet tool restore
+      
+    - name: Restore dependencies
+      run: dotnet restore
       
     - name: Build
       run: dotnet build --no-restore
