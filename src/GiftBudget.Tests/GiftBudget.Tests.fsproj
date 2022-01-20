@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <Compile Include="Users\UsersModel.Tests.fs" />
-    <Compile Include="Example.fs" />
   </ItemGroup>
 
   <ItemGroup>
