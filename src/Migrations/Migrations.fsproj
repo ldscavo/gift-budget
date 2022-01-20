@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
 
+    <Compile Include="202201190806.User.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
