@@ -43,8 +43,8 @@ let tests = testList "User model validation tests" [
         
     ]
     testList "Email validation tests" [
-        let invalidEmailTest = (fun x -> test (sprintf "email is invalid with value: %s" x) {
-            let testUser = { user with email = x }
+        let invalidEmailTest = (fun email -> test (sprintf "email is invalid with value: %s" email) {
+            let testUser = { user with email = email }
             let result = Validation.validate testUser
 
             Expect.isTrue (result.ContainsKey "email") "Email address is invalid"
