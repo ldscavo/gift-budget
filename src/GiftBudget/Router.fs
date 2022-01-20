@@ -21,8 +21,9 @@ let defaultView = router {
 let browserRouter = router {
     not_found_handler (htmlView NotFound.layout) //Use the default 404 webpage
     pipe_through browser //Use the default browser pipeline
-
+    
     forward "" defaultView //Use the default view
+    forward "/users" Users.Controller.resource
 }
 
 //Other scopes may use different pipelines and error handlers
