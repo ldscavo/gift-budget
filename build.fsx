@@ -6,8 +6,8 @@ open Fake.DotNet
 open Fake.IO
 open System.Threading
 
-let appPath = "./src/gift_budget/" |> Path.getFullName
-let projectPath = Path.combine appPath "gift_budget.fsproj"
+let appPath = "./src/GiftBudget/" |> Path.getFullName
+let projectPath = Path.combine appPath "GiftBudget.fsproj"
 
 
 Target.create "Clean" ignore
@@ -22,26 +22,26 @@ Target.create "Build" (fun _ ->
 
 
 Target.create "Run" (fun _ ->
-  let server = async {
-    DotNet.exec (fun p -> { p with WorkingDirectory = appPath } ) "watch" "run" |> ignore
-  }
-  let browser = async {
-    Thread.Sleep 5000
-    Process.start (fun i -> { i with FileName = "http://localhost:8085" }) |> ignore
-  }
+    let server = async {
+        DotNet.exec (fun p -> { p with WorkingDirectory = appPath } ) "watch" "run" |> ignore
+    }
+    let browser = async {
+        Thread.Sleep 5000
+        Process.start (fun i -> { i with FileName = "http://localhost:8085" }) |> ignore
+    }
 
-  [ server; browser]
-  |> Async.Parallel
-  |> Async.RunSynchronously
-  |> ignore
+    [ server; browser]
+    |> Async.Parallel
+    |> Async.RunSynchronously
+    |> ignore
 )
 
 "Clean"
-  ==> "Restore"
-  ==> "Build"
+==> "Restore"
+==> "Build"
 
 "Clean"
-  ==> "Restore"
-  ==> "Run"
+==> "Restore"
+==> "Run"
 
 Target.runOrDefault "Build"
