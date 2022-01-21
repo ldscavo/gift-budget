@@ -13,6 +13,10 @@ let user = {
     updated_on = DateTime.Now
 }
 
+let testParams (name: string) (testCond: 'a -> unit) (input: 'a list) =
+    testList name 
+        (input |> List.map (fun i -> testCase (sprintf "%s : %A" name i) (fun () -> testCond i)))
+
 [<Tests>]
 let tests = testList "User model validation tests" [
     testList "Password validation tests" [        
@@ -42,14 +46,8 @@ let tests = testList "User model validation tests" [
         }
         
     ]
+
     testList "Email validation tests" [
-        let invalidEmailTest = (fun email -> test (sprintf "email is invalid with value: %s" email) {
-            let testUser = { user with email = email }
-            let result = Validation.validate testUser
-
-            Expect.isTrue (result.ContainsKey "email") "Email address is invalid"
-        }) 
-
         test "A valid email passes validation" {
             let testUser = { user with email = "test@example.com" }
             let result = Validation.validate testUser
@@ -57,10 +55,18 @@ let tests = testList "User model validation tests" [
             Expect.isEmpty result "Validation should pass with no issues raised"
         }
 
-        invalidEmailTest "testexample.com"
-        invalidEmailTest "testexamplecom"
-        invalidEmailTest "@example.com"
-        invalidEmailTest "test@example"
-        invalidEmailTest "test.com"
+        [
+            "testexample.com"
+            "testexamplecom"
+            "@example.com"
+            "test@example"
+            "test.com"
+        ]
+        |> testParams "Invalid emaails throw a validation result" (fun email ->
+            let testUser = { user with email = email }
+            let result = Validation.validate testUser
+
+            Expect.isTrue (result.ContainsKey "email") "Email address is invalid"
+        )
     ]
 ]
