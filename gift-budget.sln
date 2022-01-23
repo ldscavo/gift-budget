@@ -8,6 +8,8 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Migrations", "src\Migration
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "GiftBudget.Tests", "src\GiftBudget.Tests\GiftBudget.Tests.fsproj", "{E0C60B38-8960-4F2A-B9D7-FECAE04F410E}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Shared", "src\Shared\Shared.fsproj", "{597EE125-1859-4EDF-8EA3-B490ADB95EB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,18 @@ Global
 		{E0C60B38-8960-4F2A-B9D7-FECAE04F410E}.Release|x64.Build.0 = Release|Any CPU
 		{E0C60B38-8960-4F2A-B9D7-FECAE04F410E}.Release|x86.ActiveCfg = Release|Any CPU
 		{E0C60B38-8960-4F2A-B9D7-FECAE04F410E}.Release|x86.Build.0 = Release|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Debug|x64.Build.0 = Debug|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Debug|x86.Build.0 = Debug|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Release|x64.ActiveCfg = Release|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Release|x64.Build.0 = Release|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Release|x86.ActiveCfg = Release|Any CPU
+		{597EE125-1859-4EDF-8EA3-B490ADB95EB5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

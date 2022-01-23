@@ -7,7 +7,7 @@ open FSharp.Control.Tasks.ContextInsensitive
 
 let inline (=>) k v = k, box v
 
-let execute (connection:#DbConnection) (sql:string) (data:_) =
+let execute (connection: #DbConnection) (sql: string) (data: _) =
     task {
         try
             let! res = connection.ExecuteAsync(sql, data)
@@ -16,7 +16,7 @@ let execute (connection:#DbConnection) (sql:string) (data:_) =
         | ex -> return Error ex
     }
 
-let query (connection:#DbConnection) (sql:string) (parameters:IDictionary<string, obj> option) =
+let query (connection: #DbConnection) (sql: string) (parameters: IDictionary<string, obj> option) =
     task {
         try
             let! res =
@@ -28,7 +28,7 @@ let query (connection:#DbConnection) (sql:string) (parameters:IDictionary<string
         | ex -> return Error ex
     }
 
-let querySingle (connection:#DbConnection) (sql:string) (parameters:IDictionary<string, obj> option) =
+let querySingle (connection: #DbConnection) (sql: string) (parameters: IDictionary<string, obj> option) =
     task {
         try
             let! res =

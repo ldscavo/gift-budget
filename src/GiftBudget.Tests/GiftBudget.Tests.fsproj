@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Utils.fs" />
+    <Compile Include="Shared\Database.Tests.fs" />
     <Compile Include="Users\UsersModel.Tests.fs" />
   </ItemGroup>
 
@@ -17,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GiftBudget\GiftBudget.fsproj" />
+    <ProjectReference Include="..\Shared\Shared.fsproj" />
   </ItemGroup>
 
   <ItemGroup>

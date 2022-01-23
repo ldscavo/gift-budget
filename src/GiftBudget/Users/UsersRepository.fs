@@ -1,20 +1,20 @@
 namespace Users
 
 open Database
-open Microsoft.Data.Sqlite
 open System.Threading.Tasks
 open FSharp.Control.Tasks.ContextInsensitive
+open Npgsql
 
 module Database =
     let getAll connectionString : Task<Result<User seq, exn>> =
         task {
-            use connection = new SqliteConnection(connectionString)
+            use connection = new NpgsqlConnection(connectionString)
             return! query connection "SELECT id, email, password, is_admin, created_on, updated_on FROM Users" None
         }
 
     let getById connectionString id : Task<Result<User option, exn>> =
         task {
-            use connection = new SqliteConnection(connectionString)
+            use connection = new NpgsqlConnection(connectionString)
 
             return!
                 querySingle
@@ -25,7 +25,7 @@ module Database =
 
     let update connectionString v : Task<Result<int, exn>> =
         task {
-            use connection = new SqliteConnection(connectionString)
+            use connection = new NpgsqlConnection(connectionString)
 
             return!
                 execute
@@ -36,7 +36,7 @@ module Database =
 
     let insert connectionString v : Task<Result<int, exn>> =
         task {
-            use connection = new SqliteConnection(connectionString)
+            use connection = new NpgsqlConnection(connectionString)
 
             return!
                 execute
@@ -47,6 +47,6 @@ module Database =
 
     let delete connectionString id : Task<Result<int, exn>> =
         task {
-            use connection = new SqliteConnection(connectionString)
+            use connection = new NpgsqlConnection(connectionString)
             return! execute connection "DELETE FROM Users WHERE id=@id" (dict [ "id" => id ])
         }

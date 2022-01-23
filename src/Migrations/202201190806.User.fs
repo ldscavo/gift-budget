@@ -11,8 +11,8 @@ type CreateUsers() =
       email TEXT NOT NULL,
       password TEXT NOT NULL,
       is_admin BOOLEAN NOT NULL,
-      created_on DATETIME NOT NULL,
-      updated_on DATETIME NOT NULL
+      created_on TIMESTAMP NOT NULL,
+      updated_on TIMESTAMP NOT NULL
     )")
 
   override __.Down() =

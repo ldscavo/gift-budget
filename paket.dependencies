@@ -8,7 +8,7 @@ nuget Saturn
 nuget Simple.Migrations
 nuget Microsoft.Data.Sqlite
 nuget Dapper
-
+nuget Npgsql
 
 // [ FAKE GROUP ]
 group Build
