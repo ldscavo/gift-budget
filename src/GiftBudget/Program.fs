@@ -29,6 +29,7 @@ let app =
             {
                 connectionString = connectionString
             }
+        )
     }
 
 [<EntryPoint>]
