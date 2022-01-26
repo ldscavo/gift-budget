@@ -12,7 +12,7 @@ let main argv =
     let assembly = Assembly.GetExecutingAssembly()
 
     let connectionString =
-        env "DATABASE_URL"
+        Env.get "DATABASE_URL"
         |> Option.bind Shared.Database.connString
         |> function
             | Some conn -> conn

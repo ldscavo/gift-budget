@@ -10,9 +10,9 @@ let endpointPipe = pipeline {
 }
 
 let app =
-    let port = env "PORT" ??- "8085"
+    let port = Env.get "PORT" ??- "8085"
     let connectionString =
-        env "DATABASE_URL"
+        Env.get "DATABASE_URL"
         |> Option.bind Shared.Database.connString
         |> function
             | Some c -> c
