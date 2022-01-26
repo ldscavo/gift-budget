@@ -6,7 +6,9 @@ open Shared.Database
 
 [<Tests>]
 let tests = testList "Shared Database tests" [
+
     testList "Connection string parsing tests" [
+
         test "A correct uri-style postgres connection string is convered to Windows-style" {
             let uri = "postgres://username:password@localhost:1234/database"
             let maybeConn = connString uri
