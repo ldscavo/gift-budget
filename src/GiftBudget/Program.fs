@@ -11,6 +11,12 @@ let endpointPipe = pipeline {
 
 let app =
     let port = env "PORT" ??- "8085"
+    let connectionString =
+        env "DATABASE_URL"
+        |> Option.bind Shared.Database.connString
+        |> function
+            | Some c -> c
+            | None -> failwith "Invalid database connection string!"
 
     application {
         pipe_through endpointPipe
@@ -23,7 +29,7 @@ let app =
         use_gzip
         use_config (fun _ ->
             {
-                connectionString = "DataSource=database.sqlite"
+                connectionString = connectionString
             }
         ) //TODO: Set development time configuration
     }

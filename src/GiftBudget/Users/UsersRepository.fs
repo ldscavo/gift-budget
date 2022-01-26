@@ -6,6 +6,18 @@ open FSharp.Control.Tasks.ContextInsensitive
 open Npgsql
 
 module Database =
+    let getAll connectionString =
+        task {
+            use connection = new NpgsqlConnection(connectionString)
+            let sql = """
+                SELECT
+                    id, email, password, is_admin,
+                    created_on, updated_on
+                FROM Users;"""
+
+            return! query connection sql None
+        }
+
     let getById connectionString id : Task<Result<User option, exn>> =
         task {
             use connection = new NpgsqlConnection(connectionString)
