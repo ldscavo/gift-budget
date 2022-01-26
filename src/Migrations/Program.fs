@@ -14,9 +14,7 @@ let main argv =
     let connectionString =
         Env.get "DATABASE_URL"
         |> Option.bind Shared.Database.connString
-        |> function
-            | Some conn -> conn
-            | None -> failwith "No database connection set!"
+        |> Option.get // throws if None
 
     use db = new NpgsqlConnection(connectionString)
     

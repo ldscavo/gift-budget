@@ -14,9 +14,7 @@ let app =
     let connectionString =
         Env.get "DATABASE_URL"
         |> Option.bind Shared.Database.connString
-        |> function
-            | Some c -> c
-            | None -> failwith "Invalid database connection string!"
+        |> Option.get // throws if None
 
     application {
         pipe_through endpointPipe
@@ -31,7 +29,6 @@ let app =
             {
                 connectionString = connectionString
             }
-        ) //TODO: Set development time configuration
     }
 
 [<EntryPoint>]
