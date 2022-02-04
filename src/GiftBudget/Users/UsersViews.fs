@@ -9,7 +9,12 @@ let getOrDefault f defaultValue opt =
     | Some o -> f o
     | None -> defaultValue
 
-let login (ctx: HttpContext) (login: Login option) (validationResult: Map<string, string>)  =
+let login (ctx: HttpContext) (login: Login option) (formErrors: Map<string, string>)  =
+    let maybeError key =
+        if Map.containsKey key formErrors then
+            p [ _class "help is-danger" ] [ str formErrors.[key] ]
+        else span [] []
+
     App.layout [
         section [ _class "section" ] [
             div [ _class "container" ] [
@@ -24,12 +29,14 @@ let login (ctx: HttpContext) (login: Login option) (validationResult: Map<string
                             _name "email"
                             _placeholder "user@example.com"
                             _value (login |> getOrDefault (fun l -> l.email) "")
-                        ] 
+                        ]
+                        maybeError "email"
                     ]
                     div [] [
                         label [_for "password"] [ encodedText "Password:" ]
                         br []
-                        input [ _type "password"; _id "password"; _name "password" ] 
+                        input [ _type "password"; _id "password"; _name "password" ]
+                        maybeError "password"
                     ]
                     div [] [ input [ _type "submit"; _value "Login >>" ] ]
                 ]
