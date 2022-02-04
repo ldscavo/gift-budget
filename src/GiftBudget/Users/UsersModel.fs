@@ -17,6 +17,7 @@ type User =
         member x.email = x.email
         member x.password = x.password
 
+[<CLIMutable>]
 type Login =
     { email: string
       password: string }
