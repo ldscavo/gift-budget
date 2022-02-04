@@ -36,3 +36,5 @@ let login (ctx: HttpContext) (login: Login option) (validationResult: Map<string
             ]
         ]
     ]
+
+let loginSuccess ctx = str "HUZZAH"
