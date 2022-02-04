@@ -5,25 +5,11 @@ open FSharp.Control.Tasks.ContextInsensitive
 open Config
 open Saturn
 
-let indexAction (ctx: HttpContext) =
+let private showLogin (ctx: HttpContext) =
     task {
-        let cnf = Controller.getConfig ctx
-        let! result = Database.getAll cnf.connectionString
-
-        match result with
-        | Ok result -> return! Controller.renderHtml ctx (Views.index ctx (List.ofSeq result))
-        | Error ex -> return raise ex
-    }
-
-let showAction (ctx: HttpContext) (id: string) =
-    task {
-        let cnf = Controller.getConfig ctx
-        let! result = Database.getById cnf.connectionString id
-
-        match result with
-        | Ok (Some result) -> return! Controller.renderHtml ctx (Views.show ctx result)
-        | Ok None -> return! Controller.renderHtml ctx (NotFound.layout)
-        | Error ex -> return raise ex
+        return!
+            Views.login ctx
+            |> Controller.renderHtml ctx
     }
 
 let addAction (ctx: HttpContext) =
@@ -85,11 +71,16 @@ let deleteAction (ctx: HttpContext) (id: string) =
 
 let resource =
     controller {
-        index indexAction
-        show showAction
+        index showLogin
         add addAction
         edit editAction
         create createAction
         update updateAction
         delete deleteAction
+    }
+
+let login =
+    controller {
+        index showLogin
+        create showLogin
     }

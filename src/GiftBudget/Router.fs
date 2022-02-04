@@ -22,6 +22,7 @@ let browserRouter = router {
     pipe_through browser //Use the default browser pipeline
     
     forward "" defaultView //Use the default view
+    forward "/login" Users.Controller.login
     forward "/users" Users.Controller.resource
 }
 
