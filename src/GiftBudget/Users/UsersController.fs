@@ -22,8 +22,7 @@ let private attemptLogin (ctx: HttpContext) =
 
         match maybeUser with
         | Ok (Some user) ->
-            let isMatch = BCrypt.Verify(input.password, user.password)
-            if isMatch then            
+            if BCrypt.Verify(input.password, user.password) then            
                 // mark the user as authenticated somehow
                 return! Controller.renderHtml ctx (Views.loginSuccess ctx)
             else
