@@ -7,12 +7,14 @@ type CreateUsers() =
 
   override __.Up() =
     base.Execute(@"CREATE TABLE Users(
-      id TEXT NOT NULL,
+      id UUID NOT NULL,
       email TEXT NOT NULL,
       password TEXT NOT NULL,
       is_admin BOOLEAN NOT NULL,
       created_on TIMESTAMP NOT NULL,
-      updated_on TIMESTAMP NOT NULL
+      updated_on TIMESTAMP NOT NULL,
+
+      PRIMARY KEY (id)
     )")
 
   override __.Down() =
