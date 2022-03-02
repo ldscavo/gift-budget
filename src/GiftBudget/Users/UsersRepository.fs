@@ -2,7 +2,7 @@ module Users.Database
 
 open Database
 open System.Threading.Tasks
-open FSharp.Control.Tasks.ContextInsensitive
+open FSharp.Control.Tasks
 open Npgsql
 
 let getAll connectionString =

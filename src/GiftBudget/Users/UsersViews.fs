@@ -1,7 +1,7 @@
 module Users.Views
 
 open Microsoft.AspNetCore.Http
-open Giraffe.GiraffeViewEngine
+open Giraffe.ViewEngine
 open Saturn
 
 let getOrDefault f defaultValue opt =

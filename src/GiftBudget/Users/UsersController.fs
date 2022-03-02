@@ -1,7 +1,7 @@
 module Users.Controller
 
 open Microsoft.AspNetCore.Http
-open FSharp.Control.Tasks.ContextInsensitive
+open FSharp.Control.Tasks
 open Config
 open Saturn
 open BCrypt.Net
