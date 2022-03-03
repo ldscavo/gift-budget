@@ -50,10 +50,21 @@ let private attemptLogin (ctx: HttpContext) =
             return! Controller.renderHtml ctx (InternalError.layout ex)
     }
 
+let private logoutUser (ctx: HttpContext) =
+    task {
+        let! _ = AuthenticationHttpContextExtensions.SignOutAsync ctx
+        return! Controller.redirect ctx "/login"
+    }
+
 let login =
     controller {
         index showLogin
         create attemptLogin
+    }
+
+let logout =
+    controller {
+        index logoutUser
     }
 
 let loggedInTest = controller {

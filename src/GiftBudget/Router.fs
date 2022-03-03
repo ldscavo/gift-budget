@@ -26,6 +26,7 @@ let defaultView = router {
 
 let loggedInRouter = router {
     pipe_through requires_login
+    forward "/logout" Users.Controller.logout
     forward "/test" Users.Controller.loggedInTest
 }
 
