@@ -16,7 +16,7 @@ let private showLogin (ctx: HttpContext) =
             |> Controller.renderHtml ctx
     }
 
-let private saveLogin user ctx =
+let private signInAuthorizedUser user ctx =
     task {
         let claims = [
             Claim("userId", user.id.ToString())
@@ -38,7 +38,7 @@ let private attemptLogin (ctx: HttpContext) =
         match maybeUser with
         | Ok (Some user) ->
             if BCrypt.Verify(input.password, user.password) then      
-                let! _ = saveLogin user ctx
+                let! _ = signInAuthorizedUser user ctx
                 return! Controller.redirect ctx "/test"
             else
                 let errorMsg = Map.ofList ["password", "Invalid password"]
