@@ -44,4 +44,6 @@ let login (ctx: HttpContext) (login: Login option) (formErrors: Map<string, stri
         ]
     ]
 
-let loginSuccess ctx = str "HUZZAH"
+let loginSuccess ctx =
+    str "HUZZAH"
+    |> System.Threading.Tasks.Task.FromResult

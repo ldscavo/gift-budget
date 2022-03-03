@@ -3,6 +3,8 @@ module Server
 open Saturn
 open Shared.Env
 open Config
+open Microsoft.AspNetCore.Authentication
+open System
 
 let endpointPipe = pipeline {
     plug head
@@ -25,11 +27,12 @@ let app =
         memory_cache
         use_static "static"
         use_gzip
-        use_config (fun _ ->
-            {
-                connectionString = connectionString
-            }
-        )
+        use_config (fun _ -> { connectionString = connectionString })
+        use_cookies_authentication_with_config
+            ( fun options ->
+                  options.ExpireTimeSpan <- TimeSpan.FromDays 3
+                  options.SlidingExpiration <- true
+                  options.LoginPath <- "/login" )       
     }
 
 [<EntryPoint>]
