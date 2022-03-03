@@ -20,7 +20,8 @@ type User =
 [<CLIMutable>]
 type Login =
     { email: string
-      password: string }
+      password: string
+      redirectUrl: string }
 
     interface ILogin with
         member x.email = x.email

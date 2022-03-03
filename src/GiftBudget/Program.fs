@@ -32,7 +32,8 @@ let app =
             ( fun options ->
                   options.ExpireTimeSpan <- TimeSpan.FromDays 3
                   options.SlidingExpiration <- true
-                  options.LoginPath <- "/login" )       
+                  options.LoginPath <- "/login"
+                  options.ReturnUrlParameter <- "redirectUrl" )       
     }
 
 [<EntryPoint>]

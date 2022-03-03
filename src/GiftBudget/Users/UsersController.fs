@@ -9,10 +9,17 @@ open System.Security.Claims
 open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Authentication
 
+[<CLIMutable>]
+type Query = {
+    redirectUrl: string option
+}
+
 let private showLogin (ctx: HttpContext) =
     task {
+        let queryParams = Controller.getQuery<Query> ctx
+
         return!
-            Views.login ctx None Map.empty
+            Views.login ctx None Map.empty queryParams.redirectUrl
             |> Controller.renderHtml ctx
     }
 
@@ -39,13 +46,14 @@ let private attemptLogin (ctx: HttpContext) =
         | Ok (Some user) ->
             if BCrypt.Verify(input.password, user.password) then      
                 let! _ = signInAuthorizedUser user ctx
-                return! Controller.redirect ctx "/test"
+                
+                return! Controller.redirect ctx input.redirectUrl
             else
                 let errorMsg = Map.ofList ["password", "Invalid password"]
-                return! Controller.renderHtml ctx (Views.login ctx (Some input) errorMsg)
+                return! Controller.renderHtml ctx (Views.login ctx (Some input) errorMsg (Some input.redirectUrl))
         | Ok None ->
             let errorMsg = Map.ofList ["email", "Invalid email"]
-            return! Controller.renderHtml ctx (Views.login ctx (Some input) errorMsg)
+            return! Controller.renderHtml ctx (Views.login ctx (Some input) errorMsg (Some input.redirectUrl))
         | Error ex ->
             return! Controller.renderHtml ctx (InternalError.layout ex)
     }
