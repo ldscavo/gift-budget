@@ -10,13 +10,13 @@ open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Authentication
 
 [<CLIMutable>]
-type Query = {
+type QueryParams = {
     redirectUrl: string option
 }
 
 let private showLogin (ctx: HttpContext) =
     task {
-        let queryParams = Controller.getQuery<Query> ctx
+        let queryParams = Controller.getQuery<QueryParams> ctx
 
         return!
             Views.login ctx None Map.empty queryParams.redirectUrl
@@ -25,10 +25,9 @@ let private showLogin (ctx: HttpContext) =
 
 let private signInAuthorizedUser user ctx =
     task {
-        let claims = [
-            Claim("userId", user.id.ToString())
-            Claim("isAdmin", user.is_admin.ToString())
-        ]
+        let claims =
+            [ Claim("userId", user.id.ToString())
+              Claim("isAdmin", user.is_admin.ToString()) ]
 
         let identity = ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme)                
     
@@ -45,15 +44,20 @@ let private attemptLogin (ctx: HttpContext) =
         match maybeUser with
         | Ok (Some user) ->
             if BCrypt.Verify(input.password, user.password) then      
-                let! _ = signInAuthorizedUser user ctx
-                
+                let! _ = signInAuthorizedUser user ctx                
                 return! Controller.redirect ctx input.redirectUrl
             else
                 let errorMsg = Map.ofList ["password", "Invalid password"]
-                return! Controller.renderHtml ctx (Views.login ctx (Some input) errorMsg (Some input.redirectUrl))
+                return!
+                    Views.login ctx (Some input) errorMsg (Some input.redirectUrl)
+                    |> Controller.renderHtml ctx
+
         | Ok None ->
             let errorMsg = Map.ofList ["email", "Invalid email"]
-            return! Controller.renderHtml ctx (Views.login ctx (Some input) errorMsg (Some input.redirectUrl))
+            return!
+                Views.login ctx (Some input) errorMsg (Some input.redirectUrl)
+                |> Controller.renderHtml ctx
+
         | Error ex ->
             return! Controller.renderHtml ctx (InternalError.layout ex)
     }
@@ -70,10 +74,7 @@ let login =
         create attemptLogin
     }
 
-let logout =
-    controller {
-        index logoutUser
-    }
+let logout = controller { index logoutUser }
 
 let loggedInTest = controller {
     index Views.loginSuccess
