@@ -4,18 +4,22 @@ type ILogin =
     abstract email: string
     abstract password: string
 
+type UserType =
+    | User
+    | Admin
+
 [<CLIMutable>]
 type User =
-    { id: System.Guid
-      email: string
-      password: string
-      is_admin: bool
-      created_on: System.DateTime
-      updated_on: System.DateTime }
+    { Id: System.Guid
+      Email: string
+      Password: string
+      Type: UserType
+      CreatedOn: System.DateTime
+      UpdatedOn: System.DateTime }
 
     interface ILogin with
-        member x.email = x.email
-        member x.password = x.password
+        member x.email = x.Email
+        member x.password = x.Password
 
 [<CLIMutable>]
 type Login =
@@ -48,6 +52,6 @@ module Validation =
         |> List.fold
             (fun acc validation ->
                 match validation user with
-                | Some (key, validationMessage) -> Map.add key validationMessage acc
+                | Some (key, msg) -> acc |> Map.add key msg
                 | None -> acc)
             Map.empty

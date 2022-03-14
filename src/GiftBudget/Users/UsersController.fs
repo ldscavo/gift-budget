@@ -26,8 +26,7 @@ let private showLogin (ctx: HttpContext) =
 let private signInAuthorizedUser user ctx =
     task {
         let claims =
-            [ Claim("userId", user.id.ToString())
-              Claim("isAdmin", user.is_admin.ToString()) ]
+            [ Claim("userId", user.Id.ToString()) ]
 
         let identity = ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme)                
     
@@ -43,7 +42,7 @@ let private attemptLogin (ctx: HttpContext) =
 
         match maybeUser with
         | Ok (Some user) ->
-            if BCrypt.Verify(input.password, user.password) then      
+            if BCrypt.Verify(input.password, user.Password) then      
                 let! _ = signInAuthorizedUser user ctx                
                 return! Controller.redirect ctx input.redirectUrl
             else
@@ -76,6 +75,7 @@ let login =
 
 let logout = controller { index logoutUser }
 
-let loggedInTest = controller {
-    index Views.loginSuccess
-}
+let loggedInTest =
+    controller {
+        index Views.loginSuccess
+    }
