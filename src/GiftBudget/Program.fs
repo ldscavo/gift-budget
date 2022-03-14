@@ -6,10 +6,11 @@ open Config
 open Microsoft.AspNetCore.Authentication
 open System
 
-let endpointPipe = pipeline {
-    plug head
-    plug requestId
-}
+let endpointPipe =
+    pipeline {
+        plug head
+        plug requestId
+    }
 
 let app =
     let port = Env.get "PORT" ??- "8085"
