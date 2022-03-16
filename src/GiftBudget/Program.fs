@@ -19,6 +19,12 @@ let app =
         |> Option.bind Shared.Database.connString
         |> Option.get // throws if None
 
+    let authOptions (options: Cookies.CookieAuthenticationOptions) =
+        options.ExpireTimeSpan <- TimeSpan.FromDays 3
+        options.SlidingExpiration <- true
+        options.LoginPath <- "/login"
+        options.ReturnUrlParameter <- "redirectUrl"
+
     application {
         pipe_through endpointPipe
 
@@ -29,12 +35,7 @@ let app =
         use_static "static"
         use_gzip
         use_config (fun _ -> { connectionString = connectionString })
-        use_cookies_authentication_with_config
-            ( fun options ->
-                  options.ExpireTimeSpan <- TimeSpan.FromDays 3
-                  options.SlidingExpiration <- true
-                  options.LoginPath <- "/login"
-                  options.ReturnUrlParameter <- "redirectUrl" )       
+        use_cookies_authentication_with_config authOptions     
     }
 
 [<EntryPoint>]
