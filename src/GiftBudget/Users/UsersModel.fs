@@ -1,8 +1,8 @@
 namespace Users
 
 type ILogin =
-    abstract email: string
-    abstract password: string
+    abstract Email: string
+    abstract Password: string
 
 type UserType =
     | User
@@ -18,8 +18,8 @@ type User =
       UpdatedOn: System.DateTime }
 
     interface ILogin with
-        member x.email = x.Email
-        member x.password = x.Password
+        member x.Email = x.Email
+        member x.Password = x.Password
 
 [<CLIMutable>]
 type Login =
@@ -28,8 +28,8 @@ type Login =
       redirectUrl: string }
 
     interface ILogin with
-        member x.email = x.email
-        member x.password = x.password
+        member x.Email = x.email
+        member x.Password = x.password
 
 module Validation =    
     open System
@@ -40,11 +40,11 @@ module Validation =
     let validate (user: ILogin) =
         let validators = [
             fun (u: ILogin) ->
-                if String.IsNullOrWhiteSpace u.password then Some ("password", "Password shouldn't be empty")
+                if String.IsNullOrWhiteSpace u.Password then Some ("password", "Password shouldn't be empty")
                 else None
 
             fun (u: ILogin) ->
-                if emailRegex.IsMatch u.email then None
+                if emailRegex.IsMatch u.Email then None
                 else Some ("email", "Email address is invalid")
         ]
 
