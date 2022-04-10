@@ -25,9 +25,7 @@ let private showLogin (ctx: HttpContext) =
 
 let private signInAuthorizedUser user ctx =
     task {
-        let claims =
-            [ Claim("userId", user.Id.ToString()) ]
-
+        let claims = [ Claim("userId", user.Id.ToString()) ]
         let identity = ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme)                
     
         return! AuthenticationHttpContextExtensions.SignInAsync(ctx, ClaimsPrincipal(identity))
@@ -73,7 +71,10 @@ let login =
         create attemptLogin
     }
 
-let logout = controller { index logoutUser }
+let logout =
+    controller {
+        index logoutUser
+    }
 
 let loggedInTest =
     controller {
