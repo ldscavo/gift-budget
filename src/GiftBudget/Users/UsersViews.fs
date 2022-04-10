@@ -16,39 +16,34 @@ let login (ctx: HttpContext) (login: Login option) (formErrors: Map<string, stri
         else span [] []
 
     App.layout [
-        section [ _class "section" ] [
-            div [ _class "container" ] [
-                form [ _action (Links.index ctx); _method "post" ] [
-                    h1 [] [ str "Login" ]
-                    div [] [
-                        label [ _for "email" ] [ encodedText "Email:" ]
-                        br []
+        div [ _class "container" ] [
+            h1 [_class "is-size-3"] [ str "Login" ]
+            div [_class "box"] [
+                form [_class "control"; _action (Links.index ctx); _method "post"] [                    
+                    div [_class "field"] [
+                        label [_class "label"] [str "Email"]                        
                         input [
-                            _type "email"
-                            _id "email"
-                            _name "email"
-                            _placeholder "user@example.com"
+                            _class "input"; _name "email"; _placeholder "user@example.com"
                             _value (login |> getOrDefault (fun l -> l.email) "")
-                        ]
+                        ]                        
                         maybeError "email"
                     ]
-                    div [] [
-                        label [_for "password"] [ encodedText "Password:" ]
-                        br []
-                        input [ _type "password"; _id "password"; _name "password" ]
+                    div [_class "field"] [
+                        label [_class "label"] [str "Password"]                        
+                        input [_class "input"; _type "password"; _name "password"]                        
                         maybeError "password"
                     ]
-                    div [] [
+                    div [_class "field"] [
                         input [
-                            _type "hidden"
-                            _name "redirectUrl"
+                            _type "hidden"; _name "redirectUrl"
                             _value (redirectUrl |> Option.defaultValue "/")
                         ]
-                        input [ _type "submit"; _value "Login >>" ]
-                    ]
+                        input [ _class "button is-link"; _type "submit"; _value "Login" ]
+                    ]                        
                 ]
             ]
         ]
+        
     ]
 
 let loginSuccess ctx =
