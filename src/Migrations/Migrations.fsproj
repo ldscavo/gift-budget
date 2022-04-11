@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,6 +6,7 @@
   <ItemGroup>
 
     <Compile Include="202201190806.User.fs" />
+    <Compile Include="202204102226.Recipient.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
