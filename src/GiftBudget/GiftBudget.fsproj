@@ -16,6 +16,7 @@
     <Compile Include="Users\UsersViews.fs" />
     <Compile Include="Users\UsersRepository.fs" />
     <Compile Include="Users\UsersController.fs" />
+    <Compile Include="Recipients\RecipientsModel.fs" />
     <Compile Include="Router.fs" />
     <Compile Include="Program.fs" />
 
