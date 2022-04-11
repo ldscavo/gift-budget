@@ -1,1 +1,24 @@
-/* This file is for your main application css. */
+#nav {
+    background: #42babd;
+    color: #fff;
+}
+
+    #nav a {
+        color: #fff;
+    }
+
+    #nav .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-shadow: 1px 1px #2c3e50;
+    }
+
+    #nav .navbar-item:hover {
+        background: #42babd;
+    }
+
+    #nav .navbar-brand .navbar-item img {
+        height: 28px;
+        width: 28px;
+        margin-right: 5px;
+    }
