@@ -9,7 +9,7 @@ let getOrDefault f defaultValue opt =
     | Some o -> f o
     | None -> defaultValue
 
-let login (ctx: HttpContext) (login: Login option) (formErrors: Map<string, string>) (redirectUrl: string option) =
+let login ctx login formErrors redirectUrl =
     let maybeError key =
         if Map.containsKey key formErrors then
             p [ _class "help is-danger" ] [ str formErrors.[key] ]
