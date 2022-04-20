@@ -9,6 +9,7 @@
     <Compile Include="Utils.fs" />
     <Compile Include="Shared\Database.Tests.fs" />
     <Compile Include="Users\UsersModel.Tests.fs" />
+    <Compile Include="Users\UsersService.Tests.fs" />
   </ItemGroup>
 
   <ItemGroup>

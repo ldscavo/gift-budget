@@ -31,7 +31,7 @@ let getAll connectionString =
             SELECT
                 id, email, password, is_admin,
                 created_on, updated_on
-            FROM Users;"""
+            FROM Users; """
 
         let! users = query connection sql None
         return users
@@ -46,7 +46,7 @@ let getById connectionString id : Task<Result<User option, exn>> =
                 id, email, password, is_admin,
                 created_on, updated_on
             FROM Users
-            WHERE id = @id;"""
+            WHERE id = @id; """
 
         let! user = querySingle connection query (dict [ "id" => id ] |> Some)
         return user |> Result.map (Option.map toUser)
