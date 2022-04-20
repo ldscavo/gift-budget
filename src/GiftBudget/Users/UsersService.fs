@@ -8,7 +8,7 @@ type LoginResult =
     | BadPassword of Login
     | LoginError of exn
 
-let verifyLogin (maybeUser: Result<User option, exn>) (login: Login) =
+let verifyLogin maybeUser login =
     match maybeUser with
     | Ok (Some user) ->
         if user.Email = login.email then
