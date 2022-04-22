@@ -4,25 +4,23 @@ open System
 
 type IRecipient =
     abstract Name: string
-    abstract Notes: string
 
 [<CLIMutable>]
 type Recipient =
     { Id: Guid
       Name: string
-      Notes: string
+      Notes: string option
       CreatedOn: DateTime
       UpdatedOn: DateTime }
 
     interface IRecipient with
         member this.Name = this.Name
-        member this.Notes = this.Notes
 
 module Validation =
     let validate (recipient: IRecipient) =
         let validators = [
             fun (g: IRecipient) ->
-                if String.IsNullOrEmpty g.Name then
+                if String.IsNullOrWhiteSpace g.Name then
                     Some ("name", "Recipient must have a name")
                 else
                     None

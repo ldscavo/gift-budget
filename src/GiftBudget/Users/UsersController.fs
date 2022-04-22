@@ -38,8 +38,9 @@ let private attemptLogin (ctx: HttpContext) =
         let! input = Controller.getModel<Login> ctx
 
         let! maybeUser = Database.getByEmail cnf.connectionString input.email
+        let loginResult = Service.verifyLogin maybeUser input
 
-        match (Service.verifyLogin maybeUser input) with
+        match loginResult with
         | LoginResult.Success user ->
             let! _ = signInAuthorizedUser user ctx                
             return! Controller.redirect ctx input.redirectUrl

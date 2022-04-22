@@ -16,7 +16,7 @@ type private RecipientDto =
 let private toRecipient(r: RecipientDto) =
     { Id = r.id
       Name = r.name
-      Notes = r.notes
+      Notes = if (String.IsNullOrWhiteSpace r.notes) then (Some r.notes) else None
       CreatedOn = r.created_on
       UpdatedOn = r.updated_on }
 
