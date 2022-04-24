@@ -3,22 +3,41 @@
     color: #fff;
 }
 
-    #nav a {
-        color: #fff;
-    }
+#nav a {
+    color: #fff;
+}
 
-    #nav .navbar-brand {
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-shadow: 1px 1px #2c3e50;
-    }
+#nav .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 1px 1px #2c3e50;
+}
 
-    #nav .navbar-item:hover {
-        background: #42babd;
-    }
+#nav .navbar-item:hover {
+    background: #42babd;
+}
 
-    #nav .navbar-brand .navbar-item img {
-        height: 28px;
-        width: 28px;
-        margin-right: 5px;
-    }
+#nav .navbar-brand .navbar-item img {
+    height: 28px;
+    width: 28px;
+    margin-right: 5px;
+}
+
+html #login-page {
+    background: #42babd;
+}
+
+#login-page h1 {
+    font-weight: bold;
+    color: #2c3e50;
+    /* text-shadow: 1px 1px #2c3e50; */
+}
+
+#login-page h1 img {
+    height: 35px;
+    width: 35px;
+}
+
+#login-page label {
+    color: #fff;
+}
