@@ -34,10 +34,7 @@ html #login-page {
 }
 
 #login-page h1 img {
-    height: 35px;
-    width: 35px;
-}
-
-#login-page label {
-    color: #fff;
+    height: 50px;
+    width: 50px;
+    vertical-align: text-bottom;
 }
