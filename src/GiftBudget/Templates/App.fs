@@ -26,7 +26,7 @@ let layout content =
                 ]
                 div [_class "navbar-menu"] [
                     div [_class "navbar-end"] [
-                        a [_class "navbar-item"] [str "Login"]
+                        a [_class "navbar-item"; _href "/logout"] [str "Logout"]
                     ]
                 ]
             ]
