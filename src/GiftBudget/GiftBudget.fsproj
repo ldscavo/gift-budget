@@ -13,9 +13,9 @@
     <Compile Include="Templates\InternalError.fs" />
 
     <Compile Include="Users\UsersModel.fs" />
-    <Compile Include="Users\UsersViews.fs" />
     <Compile Include="Users\UsersRepository.fs" />
     <Compile Include="Users\UsersService.fs" />
+    <Compile Include="Users\UsersViews.fs" />
     <Compile Include="Users\UsersController.fs" />
     <Compile Include="Recipients\RecipientsModel.fs" />
     <Compile Include="Recipients\RecipientsRepository.fs" />
