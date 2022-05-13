@@ -30,7 +30,7 @@ let getAllForUser connString (userId: Guid) =
         """
         let! recipients = query connection sql (dict ["userId" => userId] |> Some)
         return recipients
-        |> Result.map (Seq.map toRecipient)
+        |> Result.map (List.map toRecipient)
     }
 
 let getById connString (id: Guid) =

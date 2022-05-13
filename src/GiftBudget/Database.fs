@@ -23,7 +23,7 @@ let query (connection: #DbConnection) (sql: string) (parameters: IDictionary<str
                 match parameters with
                 | Some p -> connection.QueryAsync<'T>(sql, p)
                 | None -> connection.QueryAsync<'T>(sql)
-            return Ok res
+            return Ok (res |> Seq.toList)
         with
         | ex -> return Error ex
     }
