@@ -44,7 +44,10 @@ let login ctx login formErrors redirectUrl =
                                         _type "hidden"; _name "redirectUrl"
                                         _value (redirectUrl |> Option.defaultValue "/")
                                     ]
-                                    input [ _class "button is-link"; _type "submit"; _value "Login" ]
+                                    button [ _class "button is-link"; _type "submit" ] [
+                                        span [] [str "Logon"]
+                                        span [_class "icon is-small"] [ i [_class "fas fa-angles-right"] [] ]
+                                    ]
                                 ]                        
                             ]
                         ]

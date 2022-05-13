@@ -8,9 +8,9 @@ let layoutHead =
         meta [_name "viewport"; _content "width=device-width, initial-scale=1"]
         title [] [str "Gift Budget"]
         link [_rel "icon"; _href "/favicon.ico"]
-        link [_rel "stylesheet"; _href "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"]
         link [_rel "stylesheet"; _href "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"]
         link [_rel "stylesheet"; _href "/app.css"]
+        script [_src "https://kit.fontawesome.com/d891b69acf.js"; _crossorigin "anonymous"] []
     ]
 
 let layout content =

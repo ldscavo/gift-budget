@@ -8,7 +8,10 @@ let recipientCard (recipient: Recipient) =
             div [_class "card-content"] [
                 div [_class "media"] [
                     div [_class "media-content"] [
-                        p [_class "title is-4"] [str recipient.Name]
+                        p [_class "title is-4"] [
+                            str recipient.Name
+                            span [_class "icon"] [ i [_class "fa-solid fa-angle-down"] [] ]
+                        ]                        
                     ]
                 ]
                 match recipient.Notes with
