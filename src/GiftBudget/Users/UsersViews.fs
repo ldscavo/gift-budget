@@ -55,8 +55,4 @@ let login ctx login formErrors redirectUrl =
                 ]
             ]
         ]
-    ]    
-
-let loginSuccess ctx =
-    str "HUZZAH"
-    |> System.Threading.Tasks.Task.FromResult
+    ]

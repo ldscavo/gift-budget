@@ -32,7 +32,6 @@ let loggedInRouter =
         pipe_through requires_login
         forward "/logout" Users.Controller.logout
         forward "/recipients" Recipients.Controller.resource
-        forward "/test" Users.Controller.loggedInTest
     }
 
 let browserRouter =

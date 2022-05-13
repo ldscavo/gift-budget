@@ -73,8 +73,3 @@ let logout =
     controller {
         index logoutUser
     }
-
-let loggedInTest =
-    controller {
-        index Views.loginSuccess
-    }
