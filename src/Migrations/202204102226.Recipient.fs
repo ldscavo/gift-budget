@@ -10,7 +10,7 @@ type CreateRecipients() =
       id UUID NOT NULL,
       user_id UUID NOT NULL,
       name TEXT NOT NULL,
-      notes TEXT NOT NULL,
+      notes TEXT NULL,
       created_on TIMESTAMP NOT NULL,
       updated_on TIMESTAMP NOT NULL,
 
