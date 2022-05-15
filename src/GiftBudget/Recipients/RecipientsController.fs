@@ -2,14 +2,10 @@
 
 open System
 open Config
+open Utils
 open Microsoft.AspNetCore.Http
 open FSharp.Control.Tasks
 open Saturn
-
-let getLoggedInUserId (ctx: HttpContext) =
-    ctx.User.FindFirst "userId"
-    |> fun claim -> claim.Value
-    |> Guid.Parse
 
 let private showRecipientList (ctx: HttpContext) =
     task {
