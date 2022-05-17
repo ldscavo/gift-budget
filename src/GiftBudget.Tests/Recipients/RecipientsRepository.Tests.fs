@@ -10,6 +10,7 @@ let tests = testList "Recipient database model mapping tests" [
     testList "Recipient domain model to database model tests" [
         let recipient =
             { Id = Guid.NewGuid ()
+              UserId = Guid.NewGuid ()
               Name = "John Doe"
               Notes = Some "SUPER into exotic cheeses"
               CreatedOn = DateTime.Today

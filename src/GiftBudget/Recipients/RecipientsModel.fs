@@ -8,6 +8,7 @@ type IRecipient =
 [<CLIMutable>]
 type Recipient =
     { Id: Guid
+      UserId: Guid
       Name: string
       Notes: string option
       CreatedOn: DateTime
@@ -33,3 +34,19 @@ module Validation =
                 | Some (key, msg) -> acc |> Map.add key msg
                 | None -> acc)
             Map.empty
+
+[<CLIMutable>]
+type RecipientInput =
+    { name: string
+      notes: string }
+
+    interface IRecipient with
+        member this.Name = this.name
+
+    member this.toRecipient(userId) =
+        { Id = Guid.NewGuid ()
+          UserId = userId
+          Name = this.name
+          Notes = if (String.IsNullOrWhiteSpace this.notes) then None else (Some this.notes)
+          CreatedOn = DateTime.Now
+          UpdatedOn = DateTime.Now }

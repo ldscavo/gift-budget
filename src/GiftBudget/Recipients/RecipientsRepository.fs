@@ -6,8 +6,10 @@ open System.Threading.Tasks
 open FSharp.Control.Tasks
 open Npgsql
 
+[<CLIMutable>]
 type RecipientDataEntity =
     { id: Guid
+      user_id: Guid
       name: string
       notes: string
       created_on: DateTime
@@ -15,6 +17,7 @@ type RecipientDataEntity =
 
 let toRecipient(r: RecipientDataEntity) =
     { Id = r.id
+      UserId = r.user_id
       Name = r.name
       Notes = if (String.IsNullOrWhiteSpace r.notes) then None else (Some r.notes)
       CreatedOn = r.created_on
@@ -22,6 +25,7 @@ let toRecipient(r: RecipientDataEntity) =
 
 let fromRecipient (r: Recipient) =
     { id = r.Id
+      user_id = r.UserId
       name = r.Name
       notes =
         match r.Notes with
@@ -34,7 +38,7 @@ let getAllForUser connString (userId: Guid) =
     task {
         use connection = new NpgsqlConnection(connString)
         let sql = """
-            SELECT id, name, notes, created_on, updated_on
+            SELECT id, user_id, name, notes, created_on, updated_on
             FROM Recipients
             WHERE user_id = @userId;
         """
@@ -47,7 +51,7 @@ let getById connString (id: Guid) =
     task {
         use connection = new NpgsqlConnection(connString)
         let sql = """
-            SELECT id, name, notes, created_on, updated_on
+            SELECT id, user_id, name, notes, created_on, updated_on
             FROM Recipients
             WHERE id = @id;
         """
@@ -61,9 +65,9 @@ let insert connectionString (recipient: Recipient) : Task<Result<int, exn>> =
         use connection = new NpgsqlConnection(connectionString)
         let sql = """
             INSERT INTO Recipients
-                (id, name, notes, created_on, updated_on)
+                (id, user_id, name, notes, created_on, updated_on)
             VALUES
-                (@id, @name, @notes, created_on, updated_on)
+                (@id, @user_id, @name, @notes, @created_on, @updated_on)
         """
 
         return! execute connection sql (recipient |> fromRecipient)

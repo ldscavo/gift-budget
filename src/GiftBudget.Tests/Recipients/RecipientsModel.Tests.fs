@@ -6,6 +6,7 @@ open Recipients
 
 let recipient =
     { Id = Guid.NewGuid ()
+      UserId = Guid.NewGuid ()
       Name = "John Doe"
       Notes = Some "He really really like pineapples for some reason"
       CreatedOn = DateTime.Now
