@@ -13,7 +13,6 @@ let recipientCard ctx (recipient: Recipient) =
                     div [_class "media-content"] [
                         p [_class "title is-4"] [
                             str recipient.Name
-                            span [_class "icon"] [ i [_class "fa-solid fa-angle-down"] [] ]
                         ]                        
                     ]
                 ]
@@ -35,7 +34,12 @@ let recipientsList ctx (recipients: Recipient list) =
         | _ -> recipients |> List.map (recipientCard ctx) 
 
     App.layout [
-        h1 [_class "title"] [str "Recipients"]
+        h1 [_class "title"] [
+            str "Recipients"
+            a [_href (Links.add ctx)] [
+                span [_class "icon is-small ml-4"] [ i [_class "fas fa-square-plus"] [] ]
+            ]
+        ]
         div [] recipientCardList                  
     ]
 
