@@ -53,6 +53,7 @@ let tests = testList "Recipient database model mapping tests" [
     testList "Recipient database model to domain model tests" [
         let dataRecipient =
             { id = Guid.NewGuid ()
+              user_id = Guid.NewGuid ()
               name = "John Doe"
               notes = "Collects ceramic figuringes of weasels"
               created_on = DateTime.Today
