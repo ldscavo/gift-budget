@@ -36,7 +36,7 @@ let private detail (ctx: HttpContext) (id: Guid) =
 
 let private addRecipient (ctx: HttpContext) =
     task {
-        let view = Views.addEditRecipient ctx None None
+        let view = Views.addEditRecipient ctx None None Map.empty
         return! Controller.renderHtml ctx view
     }
 
@@ -57,11 +57,11 @@ let private createRecipient (ctx: HttpContext) =
                 return! Controller.redirect ctx $"/recipients/{recipient.Id.ToString()}"
             | Error _ ->
                 return! 
-                    Views.addEditRecipient ctx None (Some input)
+                    Views.addEditRecipient ctx None (Some input) Map.empty
                     |> Controller.renderHtml ctx
         else
             return! 
-                Views.addEditRecipient ctx None (Some input)
+                Views.addEditRecipient ctx None (Some input) validationResult
                 |> Controller.renderHtml ctx
     }
 
