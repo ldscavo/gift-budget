@@ -12,6 +12,7 @@
     <Compile Include="Users\UsersService.Tests.fs" />
     <Compile Include="Recipients\RecipientsModel.Tests.fs" />
     <Compile Include="Recipients\RecipientsRepository.Tests.fs" />
+    <Compile Include="Ideas\IdeasModel.Tests.fs" />
   </ItemGroup>
 
   <ItemGroup>
