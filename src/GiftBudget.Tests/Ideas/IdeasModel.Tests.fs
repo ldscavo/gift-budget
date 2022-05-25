@@ -16,7 +16,7 @@ let idea =
 
 [<Tests>]
 let tests = testList "Idea model tests" [
-    
+
     testList "Idea model validation tests" [
         
         testCase "A complete idea should be valid" <| fun _ ->
