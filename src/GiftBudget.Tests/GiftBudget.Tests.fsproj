@@ -13,6 +13,7 @@
     <Compile Include="Recipients\RecipientsModel.Tests.fs" />
     <Compile Include="Recipients\RecipientsRepository.Tests.fs" />
     <Compile Include="Ideas\IdeasModel.Tests.fs" />
+    <Compile Include="Ideas\IdeasRepository.Tests.fs" />
   </ItemGroup>
 
   <ItemGroup>
