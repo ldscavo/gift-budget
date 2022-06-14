@@ -3,11 +3,13 @@ module Database
 open Dapper
 open System.Data.Common
 open System.Collections.Generic
+open System.Threading.Tasks
 open FSharp.Control.Tasks
+open Npgsql
 
 let inline (=>) k v = k, box v
 
-let execute (connection: #DbConnection) (sql: string) (data: _) =
+let private execute (connection: #DbConnection) (sql: string) data =
     task {
         try
             let! res = connection.ExecuteAsync(sql, data)
@@ -16,7 +18,7 @@ let execute (connection: #DbConnection) (sql: string) (data: _) =
         | ex -> return Error ex
     }
 
-let query (connection: #DbConnection) (sql: string) (parameters: IDictionary<string, obj> option) =
+let private query (connection: #DbConnection) (sql: string) (parameters: IDictionary<string, obj> option) =
     task {
         try
             let! res =
@@ -28,7 +30,7 @@ let query (connection: #DbConnection) (sql: string) (parameters: IDictionary<str
         | ex -> return Error ex
     }
 
-let querySingle (connection: #DbConnection) (sql: string) (parameters: IDictionary<string, obj> option) =
+let private querySingle (connection: #DbConnection) (sql: string) (parameters: IDictionary<string, obj> option) =
     task {
         try
             let! res =
@@ -42,3 +44,31 @@ let querySingle (connection: #DbConnection) (sql: string) (parameters: IDictiona
         with
         | ex -> return Error ex
     }
+
+type IDatabase =
+    abstract execute : string -> 'a -> Task<Result<int,exn>>
+    abstract query : string -> IDictionary<string, obj> option -> Task<Result<'a list, exn>>
+    abstract querySingle : string -> IDictionary<string, obj> option -> Task<Result<'a option, exn>>
+
+type IDb =
+    abstract db: IDatabase
+
+type Database(connectionString: string) =
+    interface IDatabase with
+        member __.execute sql data =
+            task {
+                use conn = new NpgsqlConnection(connectionString)
+                return! execute conn sql data
+            }            
+
+        member __.query sql parameters =
+            task {
+                use conn = new NpgsqlConnection(connectionString)
+                return! query conn sql parameters
+            }            
+
+        member __.querySingle sql parameters =
+            task {
+                use conn = new NpgsqlConnection(connectionString)
+                return! querySingle conn sql parameters
+            }            

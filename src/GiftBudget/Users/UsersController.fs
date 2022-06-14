@@ -31,12 +31,12 @@ let private signInAuthorizedUser user ctx =
         return! AuthenticationHttpContextExtensions.SignInAsync(ctx, ClaimsPrincipal(identity))
     }
 
-let private attemptLogin (ctx: HttpContext) =
+let private attemptLogin env (ctx: HttpContext) =
     task {
         let cnf = Controller.getConfig ctx
         let! input = Controller.getModel<Login> ctx
 
-        let! maybeUser = Database.getByEmail cnf.connectionString input.email
+        let! maybeUser = Database.getByEmail env input.email
         let loginResult = Service.verifyLogin maybeUser input
 
         match loginResult with
@@ -63,10 +63,10 @@ let private logoutUser (ctx: HttpContext) =
         return! Controller.redirect ctx "/login"
     }
 
-let login =
+let login env =
     controller {
         index showLogin
-        create attemptLogin
+        create (attemptLogin env)
     }
 
 let logout =

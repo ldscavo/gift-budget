@@ -24,23 +24,21 @@ let private toUser (u: UserDto) =
       CreatedOn = u.created_on
       UpdatedOn = u.updated_on }
 
-let getAll connectionString =
+let getAll (env: #IDb) =
     task {
-        use connection = new NpgsqlConnection(connectionString)
         let sql = """
             SELECT
                 id, email, password, is_admin,
                 created_on, updated_on
             FROM Users; """
 
-        let! users = query connection sql None
+        let! users = env.db.query sql None
         return users
         |> Result.map (Seq.map toUser)
     }
 
-let getById connectionString id : Task<Result<User option, exn>> =
+let getById (env: #IDb) id : Task<Result<User option, exn>> =
     task {
-        use connection = new NpgsqlConnection(connectionString)
         let query = """
             SELECT
                 id, email, password, is_admin,
@@ -48,13 +46,12 @@ let getById connectionString id : Task<Result<User option, exn>> =
             FROM Users
             WHERE id = @id; """
 
-        let! user = querySingle connection query (dict [ "id" => id ] |> Some)
+        let! user = env.db.querySingle query (dict [ "id" => id ] |> Some)
         return user |> Result.map (Option.map toUser)
     }
 
-let getByEmail connectionString (email: string) : Task<Result<User option, exn>> =
+let getByEmail (env: #IDb) (email: string) : Task<Result<User option, exn>> =
     task {
-        use conn = new NpgsqlConnection(connectionString)
         let query = """
             select
                 id, email, password,
@@ -62,13 +59,12 @@ let getByEmail connectionString (email: string) : Task<Result<User option, exn>>
             FROM Users
             WHERE email = @email; """
 
-        let! user = querySingle conn query (dict [ "email" => email ] |> Some)
+        let! user = env.db.querySingle query (dict [ "email" => email ] |> Some)
         return user |> Result.map (Option.map toUser)
     }
 
-let update connectionString v : Task<Result<int, exn>> =
+let update (env: #IDb) v : Task<Result<int, exn>> =
     task {
-        use connection = new NpgsqlConnection(connectionString)
         let query = """
             UPDATE Users
             SET email = @email,
@@ -78,24 +74,21 @@ let update connectionString v : Task<Result<int, exn>> =
                 updated_on = @updated_on
             WHERE id = @id; """
 
-        return! execute connection query v
+        return! env.db.execute query v
     }
 
-let insert connectionString v : Task<Result<int, exn>> =
+let insert (env: #IDb) v : Task<Result<int, exn>> =
     task {
-        use connection = new NpgsqlConnection(connectionString)
         let query = """
             INSERT INTO Users
                 (id, email, password, is_admin, created_on, updated_on)
             VALUES
                 (@id, @email, @password, @is_admin, @created_on, @updated_on); """
 
-        return! execute connection query v
+        return! env.db.execute query v
     }
 
-let delete connectionString id : Task<Result<int, exn>> =
+let delete (env: #IDb) id : Task<Result<int, exn>> =
     task {
-        use connection = new NpgsqlConnection(connectionString)
-
-        return! execute connection "DELETE FROM Users WHERE id = @id;" (dict [ "id" => id ])
+        return! env.db.execute "DELETE FROM Users WHERE id = @id;" (dict [ "id" => id ])
     }

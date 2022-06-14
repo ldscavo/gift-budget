@@ -17,33 +17,33 @@ let requires_login =
         requires_authentication (Giraffe.Auth.challenge CookieAuthenticationDefaults.AuthenticationScheme)    
     }
 
-let defaultView =
+let defaultView env =
     router {
         get "/" (htmlView Index.layout)
         get "/index.html" (redirectTo false "/")
         get "/default.html" (redirectTo false "/")
 
         // routes that do not require being logged in
-        forward "/login" Users.Controller.login
+        forward "/login" (Users.Controller.login env)
     }
 
-let loggedInRouter =
+let loggedInRouter env =
     router {
         pipe_through requires_login
         forward "/logout" Users.Controller.logout
-        forward "/recipients" Recipients.Controller.resource
+        forward "/recipients" (Recipients.Controller.resource env)
     }
 
-let browserRouter =
+let browserRouter env =
     router {
         not_found_handler (htmlView NotFound.layout) //Use the default 404 webpage
         pipe_through browser //Use the default browser pipeline
     
-        forward "" defaultView //Use the default view    
-        forward "" loggedInRouter
+        forward "" (defaultView env) //Use the default view    
+        forward "" (loggedInRouter env)
     }
 
-let appRouter =
+let appRouter env =
     router {
-        forward "" browserRouter
+        forward "" (browserRouter env)
     }

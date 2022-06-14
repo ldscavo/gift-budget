@@ -8,12 +8,11 @@ open FSharp.Control.Tasks
 open Saturn
 open Recipients
 
-let private showRecipientList (ctx: HttpContext) =
+let private showRecipientList env (ctx: HttpContext) =
     task {
-        let cnf : Config = Controller.getConfig ctx
         let userId = getLoggedInUserId ctx
 
-        let! maybeRecipients = Repository.getAllForUser cnf.connectionString userId        
+        let! maybeRecipients = Repository.getAllForUser env userId        
         
         match maybeRecipients with
         | Ok recipients ->
@@ -23,10 +22,10 @@ let private showRecipientList (ctx: HttpContext) =
             return! Controller.renderHtml ctx (InternalError.layout ex)           
     }
 
-let private detail (ctx: HttpContext) (id: Guid) =
+let private detail env (ctx: HttpContext) (id: Guid) =
     task {
         let cnf = Controller.getConfig ctx
-        let! maybeRecipient = Repository.getById cnf.connectionString id
+        let! maybeRecipient = Repository.getById env id
 
         match maybeRecipient with
         | Ok (Some recipient) -> return! Controller.renderHtml ctx (Views.recipientDetail ctx recipient)
@@ -40,7 +39,7 @@ let private addRecipient (ctx: HttpContext) =
         return! Controller.renderHtml ctx view
     }
 
-let private createRecipient (ctx: HttpContext) =
+let private createRecipient env (ctx: HttpContext) =
     task {
         let config : Config = Controller.getConfig ctx
 
@@ -51,7 +50,7 @@ let private createRecipient (ctx: HttpContext) =
             let userId = getLoggedInUserId ctx
             let recipient = input.toRecipient(userId)            
 
-            let! result = Repository.insert config.connectionString recipient
+            let! result = Repository.insert env recipient
             match result with
             | Ok _ ->
                 return! Controller.redirect ctx $"/recipients/{recipient.Id.ToString()}"
@@ -65,10 +64,10 @@ let private createRecipient (ctx: HttpContext) =
                 |> Controller.renderHtml ctx
     }
 
-let resource =
+let resource env =
     controller {
-        index showRecipientList
-        show detail
+        index (showRecipientList env)
+        show (detail env)
         add addRecipient
-        create createRecipient
+        create (createRecipient env)
     }

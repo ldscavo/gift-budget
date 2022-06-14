@@ -4,7 +4,6 @@ open System
 open Database
 open System.Threading.Tasks
 open FSharp.Control.Tasks
-open Npgsql
 
 [<CLIMutable>]
 type RecipientDataEntity =
@@ -34,35 +33,32 @@ let fromRecipient (r: Recipient) =
       created_on = r.CreatedOn
       updated_on = r.UpdatedOn }
 
-let getAllForUser connString (userId: Guid) =
+let getAllForUser (env: #IDb) (userId: Guid) =
     task {
-        use connection = new NpgsqlConnection(connString)
         let sql = """
             SELECT id, user_id, name, notes, created_on, updated_on
             FROM Recipients
             WHERE user_id = @userId;
         """
-        let! recipients = query connection sql (dict ["userId" => userId] |> Some)
+        let! recipients = env.db.query sql (dict ["userId" => userId] |> Some)
         return recipients
         |> Result.map (List.map toRecipient)
     }
 
-let getById connString (id: Guid) =
+let getById (env: #IDb) (id: Guid) =
     task {
-        use connection = new NpgsqlConnection(connString)
         let sql = """
             SELECT id, user_id, name, notes, created_on, updated_on
             FROM Recipients
             WHERE id = @id;
         """
 
-        let! recipients = querySingle connection sql (dict ["id" => id] |> Some)        
+        let! recipients = env.db.querySingle sql (dict ["id" => id] |> Some)        
         return recipients |> Result.map (Option.map toRecipient)
     }
 
-let insert connectionString (recipient: Recipient) : Task<Result<int, exn>> =
+let insert (env: #IDb) (recipient: Recipient) : Task<Result<int, exn>> =
     task {
-        use connection = new NpgsqlConnection(connectionString)
         let sql = """
             INSERT INTO Recipients
                 (id, user_id, name, notes, created_on, updated_on)
@@ -70,5 +66,5 @@ let insert connectionString (recipient: Recipient) : Task<Result<int, exn>> =
                 (@id, @user_id, @name, @notes, @created_on, @updated_on)
         """
 
-        return! execute connection sql (recipient |> fromRecipient)
+        return! env.db.execute sql (recipient |> fromRecipient)
     }

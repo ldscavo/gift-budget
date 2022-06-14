@@ -25,11 +25,13 @@ let app =
         options.LoginPath <- "/login"
         options.ReturnUrlParameter <- "redirectUrl"
 
+    let env = AppEnv(connectionString)
+
     application {
         pipe_through endpointPipe
 
         error_handler (fun ex _ -> pipeline { render_html (InternalError.layout ex) })
-        use_router Router.appRouter
+        use_router (Router.appRouter env)
         url (sprintf "http://0.0.0.0:%s/" port)
         memory_cache
         use_static "static"
