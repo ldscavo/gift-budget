@@ -1,4 +1,4 @@
-﻿module Ideas.Repository
+module Ideas.Repository
 
 open System
 open Database
@@ -43,10 +43,10 @@ let getAllForRecipient (env: #IDb) (recipientId: Guid) =
     task {
         let sql = """
             SELECT id, user_id, text, price, link, created_on, updated_on
-            FROM Ideas
-            JOIN IdeaRecipients ON
-                Idea.id = IdeaRecipients.idea_id AND
-                IdeaRecipients.recipientId = @recipientId
+            FROM Ideas AS i
+            JOIN IdeaRecipients AS ir ON
+                i.id = ir.idea_id AND
+                ir.recipientId = @recipientId
         """
 
         let! ideas = env.db.query sql (dict ["recipientId" => recipientId] |> Some)
