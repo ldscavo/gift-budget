@@ -7,6 +7,8 @@
 
     <Compile Include="202201190806.User.fs" />
     <Compile Include="202204102226.Recipient.fs" />
+    <Compile Include="202206142142.Idea.fs" />
+    <Compile Include="202206142149.IdeaRecipient.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
