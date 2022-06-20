@@ -39,14 +39,28 @@ let fromIdea i =
       created_on = i.CreatedOn
       updated_on = i.UpdatedOn }
 
+let getAllForUser (env: #IDb) (userId: Guid) =
+    task {
+        let sql = """
+            SELECT
+                id, user_id, text, price, link, created_on, updated_on
+            FROM ideas
+            WHERE user_id = @userId
+        """
+
+        let! ideas = env.db.query sql (dict ["userId" => userId] |> Some)
+        return ideas |> Result.map (List.map toIdea)
+    }
+
 let getAllForRecipient (env: #IDb) (recipientId: Guid) =
     task {
         let sql = """
-            SELECT id, user_id, text, price, link, created_on, updated_on
-            FROM Ideas AS i
-            JOIN IdeaRecipients AS ir ON
-                i.id = ir.idea_id AND
-                ir.recipientId = @recipientId
+            SELECT
+                i.id, i.user_id, i.text, i.price, i.link, i.created_on, i.updated_on
+            FROM ideas AS i
+            JOIN idearecipients AS ir ON
+                ir.idea_id = i.id AND
+                ir.recipient_id = @recipientId
         """
 
         let! ideas = env.db.query sql (dict ["recipientId" => recipientId] |> Some)
