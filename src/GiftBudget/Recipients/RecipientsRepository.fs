@@ -14,7 +14,7 @@ type RecipientDataEntity =
       created_on: DateTime
       updated_on: DateTime }
 
-let toRecipient(r: RecipientDataEntity) =
+let toRecipient (r: RecipientDataEntity) =
     { Id = r.id
       UserId = r.user_id
       Name = r.name
@@ -41,6 +41,23 @@ let getAllForUser (env: #IDb) (userId: Guid) =
             WHERE user_id = @userId;
         """
         let! recipients = env.db.query sql (dict ["userId" => userId] |> Some)
+
+        return recipients
+        |> Result.map (List.map toRecipient)
+    }
+
+let getAllForIdea (env: #IDb) (ideaId: Guid) =
+    task {
+        let sql = """
+            SELECT
+                r.id, r.user_id, r.name, r.notes, r.created_on, r.updated_on
+            FROM recipients AS r
+            JOIN idearecipients AS ir ON
+                ir.recipient_id = r.id AND
+                ir.idea_id = @ideaId
+        """
+
+        let! recipients = env.db.query sql (dict ["ideaId" => ideaId] |> Some)
         return recipients
         |> Result.map (List.map toRecipient)
     }
