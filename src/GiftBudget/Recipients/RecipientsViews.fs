@@ -53,6 +53,9 @@ let recipientsList ctx (recipients: Recipient list) =
 let recipientDetail ctx (recipient: Recipient) =
     App.layout [
         h1 [_class "title"] [str recipient.Name]
+        match recipient.Notes with
+        | Some notes -> p [] [str notes]
+        | None -> span [] []
     ]
 
 let addEditRecipient ctx (maybeRecipient: Recipient option) (maybeInput: RecipientInput option) (errors: Map<string, string>) =
