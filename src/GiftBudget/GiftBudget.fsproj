@@ -24,6 +24,7 @@
     <Compile Include="Recipients\RecipientsController.fs" />
     <Compile Include="Ideas\IdeasModel.fs" />
     <Compile Include="Ideas\IdeasRepository.fs" />
+    <Compile Include="Ideas\IdeasViews.fs" />
     <Compile Include="Router.fs" />
     <Compile Include="Program.fs" />
 
