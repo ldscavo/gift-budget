@@ -24,7 +24,6 @@ let private showRecipientList env (ctx: HttpContext) =
 
 let private detail env (ctx: HttpContext) (id: Guid) =
     task {
-        let cnf = Controller.getConfig ctx
         let! maybeRecipient = Repository.getById env id
 
         match maybeRecipient with
@@ -41,8 +40,6 @@ let private addRecipient (ctx: HttpContext) =
 
 let private createRecipient env (ctx: HttpContext) =
     task {
-        let config : Config = Controller.getConfig ctx
-
         let! input = Controller.getModel<RecipientInput> ctx
         let validationResult = Validation.validate input
 
