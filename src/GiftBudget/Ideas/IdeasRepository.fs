@@ -2,7 +2,8 @@ module Ideas.Repository
 
 open System
 open Database
-open FSharp.Control.Tasks
+open System.Threading.Tasks
+open FsToolkit.ErrorHandling
 
 [<CLIMutable>]
 type IdeaDataEntity =
@@ -14,6 +15,12 @@ type IdeaDataEntity =
       created_on: DateTime
       updated_on: DateTime }
 
+let toIdeaRecipients recipients =
+    match recipients with
+    | [] -> NoRecipient
+    | [recipient] -> IdeaRecipient recipient
+    | _ -> IdeaRecipients recipients
+
 let toIdea i =
     { Id = i.id
       UserId = i.user_id
@@ -23,9 +30,9 @@ let toIdea i =
           match String.IsNullOrWhiteSpace i.link with
           | false -> Some i.link
           | true -> None
+      Recipient = NoRecipient
       CreatedOn = i.created_on
-      UpdatedOn = i.updated_on
-      Recipient = NoRecipient }
+      UpdatedOn = i.updated_on }
 
 let fromIdea i =
     { id = i.Id
@@ -39,8 +46,18 @@ let fromIdea i =
       created_on = i.CreatedOn
       updated_on = i.UpdatedOn }
 
-let getAllForUser (env: #IDb) (userId: Guid) =
-    task {
+let getRecipientsForIdea (env: #IDb) (idea: Idea) =
+    taskResult {
+        let! recipients =
+            idea.Id |> Recipients.Repository.getAllForIdea env
+
+        return
+            { idea with
+                Recipient = recipients |> toIdeaRecipients }
+    }
+
+let getAllForUser (env: #IDb) (userId: Guid) :  Task<Result<Idea list, exn>> =
+    taskResult {
         let sql = """
             SELECT
                 id, user_id, text, price, link, created_on, updated_on
@@ -48,12 +65,13 @@ let getAllForUser (env: #IDb) (userId: Guid) =
             WHERE user_id = @userId
         """
 
-        let! ideas = env.db.query sql (dict ["userId" => userId] |> Some)
-        return ideas |> Result.map (List.map toIdea)
+        let! ideaDataModels = env.db.query sql (dict ["userId" => userId] |> Some)
+        let ideas = ideaDataModels |> List.map toIdea
+        return! ideas |> List.traverseTaskResultM (getRecipientsForIdea env)
     }
 
 let getAllForRecipient (env: #IDb) (recipientId: Guid) =
-    task {
+    taskResult {
         let sql = """
             SELECT
                 i.id, i.user_id, i.text, i.price, i.link, i.created_on, i.updated_on
@@ -63,6 +81,7 @@ let getAllForRecipient (env: #IDb) (recipientId: Guid) =
                 ir.recipient_id = @recipientId
         """
 
-        let! ideas = env.db.query sql (dict ["recipientId" => recipientId] |> Some)
-        return ideas |> Result.map (List.map toIdea)
+        let! ideaDataModels = env.db.query sql (dict ["recipientId" => recipientId] |> Some)
+        let ideas = ideaDataModels |> List.map toIdea
+        return! ideas |> List.traverseTaskResultM (getRecipientsForIdea env)
     }
