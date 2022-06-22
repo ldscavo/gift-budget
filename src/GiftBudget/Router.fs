@@ -32,6 +32,7 @@ let loggedInRouter env =
         pipe_through requires_login
         forward "/logout" Users.Controller.logout
         forward "/recipients" (Recipients.Controller.resource env)
+        forward "/ideas" (Ideas.Controller.resource env)
     }
 
 let browserRouter env =

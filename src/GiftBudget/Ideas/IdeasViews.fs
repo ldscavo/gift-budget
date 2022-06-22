@@ -16,3 +16,8 @@ let ideaCard ctx (idea: Idea) =
             ]
         ]
     ]
+
+let ideasList ctx ideas =
+    App.layout [
+        div [] (ideas |> List.map (ideaCard ctx))
+    ]    
