@@ -29,7 +29,7 @@
     <Compile Include="Router.fs" />
     <Compile Include="Program.fs" />
 
-    <Content Include="static\*.*">
+    <Content Include="static\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

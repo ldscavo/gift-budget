@@ -10,7 +10,7 @@ let layoutHead =
         link [_rel "icon"; _href "/favicon.ico"]
         link [_rel "stylesheet"; _href "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"]
         link [_rel "stylesheet"; _href "/app.css"]
-        script [_src "https://kit.fontawesome.com/d891b69acf.js"; _crossorigin "anonymous"] []
+        link [_rel "stylesheet"; _href "/all.min.css"]
     ]
 
 let layout content =
@@ -25,6 +25,20 @@ let layout content =
                     ]
                 ]
                 div [_class "navbar-menu"] [
+                    div [_class "navbar-start"] [
+                        a [_class "navbar-item"; _href "/ideas"] [
+                            span [_class "icon"] [i [_class "fas fa-lightbulb"] []]
+                            span [] [str "Ideas"]
+                        ]
+                        a [_class "navbar-item"; _href "/recipients"] [
+                            span [_class "icon"] [i [_class "fas fa-user"] []]
+                            span [] [str "Recipients"]
+                        ]
+                        a [_class "navbar-item"; _href "#"] [
+                            span [_class "icon"] [i [_class "fas fa-chart-pie"] []]
+                            span [] [str "Budgets"]
+                        ]
+                    ]
                     div [_class "navbar-end"] [
                         a [_class "navbar-item"; _href "/logout"] [str "Logout"]
                     ]
