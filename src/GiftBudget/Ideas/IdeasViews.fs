@@ -4,7 +4,7 @@ open Giraffe.ViewEngine
 open Saturn
 open Ideas
 
-let ideaCard ctx (idea: Idea) =
+let ideaCard ctx idea =
     div [_class "card"] [
         div [_class "card-content"] [
             div [_class "media"] [

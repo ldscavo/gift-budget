@@ -4,7 +4,7 @@ open Giraffe.ViewEngine
 open Saturn
 open Recipients
 
-let recipientCard ctx (recipient: Recipient) =
+let recipientCard ctx recipient =
     div [_class "tile is-parent"] [
         div [_class "tile is-child"] [
             div [_class "card"] [
@@ -34,7 +34,7 @@ let recipientCard ctx (recipient: Recipient) =
         ]
     ]
 
-let recipientsList ctx (recipients: Recipient list) =
+let recipientsList ctx recipients =
     let recipientCardList = 
         match recipients with
         | [] -> [ div [] [str "You've not added any recipients yet!"] ]
@@ -50,7 +50,7 @@ let recipientsList ctx (recipients: Recipient list) =
         div [_class "tile is-ancestor"] recipientCardList                  
     ]
 
-let recipientDetail ctx (recipient: Recipient) =
+let recipientDetail ctx recipient =
     App.layout [
         h1 [_class "title"] [str recipient.Name]
         match recipient.Notes with
@@ -58,7 +58,7 @@ let recipientDetail ctx (recipient: Recipient) =
         | None -> span [] []
     ]
 
-let addEditRecipient ctx (maybeRecipient: Recipient option) (maybeInput: RecipientInput option) (errors: Map<string, string>) =
+let addEditRecipient ctx maybeRecipient maybeInput errors =
     let vals =
         match maybeRecipient, maybeInput with
         | Some _, Some i -> {| name = i.name; notes = (Some i.notes) |}
