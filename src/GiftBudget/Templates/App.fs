@@ -34,8 +34,8 @@ let layout content =
                 div [_class "column"] [
                     aside [_class "menu"] [
                         ul [_class "menu-list"] [
-                            li [] [a [_href "#"] [str "Recipients"]]
-                            li [] [a [_href "#"] [str "Ideas"]]
+                            li [] [a [_href "/recipients"] [str "Recipients"]]
+                            li [] [a [_href "/ideas"] [str "Ideas"]]
                             li [] [a [_href "#"] [str "Budgets"]]
                         ]
                     ]
