@@ -19,5 +19,6 @@ let ideaCard ctx (idea: Idea) =
 
 let ideasList ctx ideas =
     App.layout [
+        h1 [_class "title"] [str "Ideas"]
         div [] (ideas |> List.map (ideaCard ctx))
     ]    
