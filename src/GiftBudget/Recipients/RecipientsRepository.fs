@@ -4,6 +4,7 @@ open System
 open Database
 open System.Threading.Tasks
 open FSharp.Control.Tasks
+open FsToolkit.ErrorHandling
 
 [<CLIMutable>]
 type RecipientDataEntity =
@@ -34,7 +35,7 @@ let fromRecipient (r: Recipient) =
       updated_on = r.UpdatedOn }
 
 let getAllForUser (env: #IDb) (userId: Guid) =
-    task {
+    taskResult {
         let sql = """
             SELECT id, user_id, name, notes, created_on, updated_on
             FROM Recipients
@@ -42,12 +43,11 @@ let getAllForUser (env: #IDb) (userId: Guid) =
         """
         let! recipients = env.db.query sql (dict ["userId" => userId] |> Some)
 
-        return recipients
-        |> Result.map (List.map toRecipient)
+        return recipients |> List.map toRecipient
     }
 
 let getAllForIdea (env: #IDb) (ideaId: Guid) =
-    task {
+    taskResult {
         let sql = """
             SELECT
                 r.id, r.user_id, r.name, r.notes, r.created_on, r.updated_on
@@ -58,12 +58,11 @@ let getAllForIdea (env: #IDb) (ideaId: Guid) =
         """
 
         let! recipients = env.db.query sql (dict ["ideaId" => ideaId] |> Some)
-        return recipients
-        |> Result.map (List.map toRecipient)
+        return recipients |> List.map toRecipient
     }
 
 let getById (env: #IDb) (id: Guid) =
-    task {
+    taskResult {
         let sql = """
             SELECT id, user_id, name, notes, created_on, updated_on
             FROM Recipients
@@ -71,10 +70,10 @@ let getById (env: #IDb) (id: Guid) =
         """
 
         let! recipients = env.db.querySingle sql (dict ["id" => id] |> Some)        
-        return recipients |> Result.map (Option.map toRecipient)
+        return recipients |> Option.map toRecipient
     }
 
-let insert (env: #IDb) (recipient: Recipient) : Task<Result<int, exn>> =
+let insert (env: #IDb) (recipient: Recipient) =
     task {
         let sql = """
             INSERT INTO Recipients

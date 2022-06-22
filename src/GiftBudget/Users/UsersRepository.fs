@@ -1,9 +1,8 @@
 module Users.Database
 
 open Database
-open System.Threading.Tasks
 open FSharp.Control.Tasks
-open Npgsql
+open FsToolkit.ErrorHandling
 
 type private UserDto =
     { id: System.Guid
@@ -25,7 +24,7 @@ let private toUser (u: UserDto) =
       UpdatedOn = u.updated_on }
 
 let getAll (env: #IDb) =
-    task {
+    taskResult {
         let sql = """
             SELECT
                 id, email, password, is_admin,
@@ -33,12 +32,11 @@ let getAll (env: #IDb) =
             FROM Users; """
 
         let! users = env.db.query sql None
-        return users
-        |> Result.map (Seq.map toUser)
+        return users |> Seq.map toUser
     }
 
-let getById (env: #IDb) id : Task<Result<User option, exn>> =
-    task {
+let getById (env: #IDb) id =
+    taskResult {
         let query = """
             SELECT
                 id, email, password, is_admin,
@@ -47,11 +45,11 @@ let getById (env: #IDb) id : Task<Result<User option, exn>> =
             WHERE id = @id; """
 
         let! user = env.db.querySingle query (dict [ "id" => id ] |> Some)
-        return user |> Result.map (Option.map toUser)
+        return user |>Option.map toUser
     }
 
-let getByEmail (env: #IDb) (email: string) : Task<Result<User option, exn>> =
-    task {
+let getByEmail (env: #IDb) (email: string) =
+    taskResult {
         let query = """
             select
                 id, email, password,
@@ -60,10 +58,10 @@ let getByEmail (env: #IDb) (email: string) : Task<Result<User option, exn>> =
             WHERE email = @email; """
 
         let! user = env.db.querySingle query (dict [ "email" => email ] |> Some)
-        return user |> Result.map (Option.map toUser)
+        return user |> Option.map toUser
     }
 
-let update (env: #IDb) v : Task<Result<int, exn>> =
+let update (env: #IDb) v =
     task {
         let query = """
             UPDATE Users
@@ -77,7 +75,7 @@ let update (env: #IDb) v : Task<Result<int, exn>> =
         return! env.db.execute query v
     }
 
-let insert (env: #IDb) v : Task<Result<int, exn>> =
+let insert (env: #IDb) v =
     task {
         let query = """
             INSERT INTO Users
@@ -88,7 +86,7 @@ let insert (env: #IDb) v : Task<Result<int, exn>> =
         return! env.db.execute query v
     }
 
-let delete (env: #IDb) id : Task<Result<int, exn>> =
+let delete (env: #IDb) id =
     task {
         return! env.db.execute "DELETE FROM Users WHERE id = @id;" (dict [ "id" => id ])
     }
