@@ -71,7 +71,7 @@ let getAllForUser (env: #IDb) (userId: Guid) :  Task<Result<Idea list, exn>> =
             WHERE user_id = @userId
         """
 
-        let! ideaDataModels = env.db.query sql (dict ["userId" => userId] |> Some)
+        let! ideaDataModels = env.db.query sql (Some {| userId = userId |})
         let ideas = ideaDataModels |> List.map toIdea
         return! ideas |> List.traverseTaskResultM (getRecipientsForIdea env)
     }
@@ -87,7 +87,7 @@ let getAllForRecipient (env: #IDb) (recipientId: Guid) =
                 ir.recipient_id = @recipientId
         """
 
-        let! ideaDataModels = env.db.query sql (dict ["recipientId" => recipientId] |> Some)
+        let! ideaDataModels = env.db.query sql (Some {| recipientId = recipientId |})
         let ideas = ideaDataModels |> List.map toIdea
         return! ideas |> List.traverseTaskResultM (getRecipientsForIdea env)
     }
@@ -101,7 +101,7 @@ let getById (env: #IDb) (id: Guid) =
             WHERE id = @id
         """
 
-        let! ideaDataModel = env.db.querySingle sql (dict ["id" => id] |> Some)
+        let! ideaDataModel = env.db.querySingle sql (Some {| id = id |})
         let idea = ideaDataModel |>  toIdea
 
         return! idea |> (getRecipientsForIdeaOption env)

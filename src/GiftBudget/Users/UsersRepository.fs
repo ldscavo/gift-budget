@@ -44,7 +44,7 @@ let getById (env: #IDb) id =
             FROM Users
             WHERE id = @id; """
 
-        let! user = env.db.querySingle query (dict [ "id" => id ] |> Some)
+        let! user = env.db.querySingle query (Some {| id = id |})
         return user |>Option.map toUser
     }
 
@@ -57,11 +57,11 @@ let getByEmail (env: #IDb) (email: string) =
             FROM Users
             WHERE email = @email; """
 
-        let! user = env.db.querySingle query (dict [ "email" => email ] |> Some)
+        let! user = env.db.querySingle query (Some {| email = email |})
         return user |> Option.map toUser
     }
 
-let update (env: #IDb) v =
+let update (env: #IDb) user =
     task {
         let query = """
             UPDATE Users
@@ -72,10 +72,10 @@ let update (env: #IDb) v =
                 updated_on = @updated_on
             WHERE id = @id; """
 
-        return! env.db.execute query v
+        return! env.db.execute query user
     }
 
-let insert (env: #IDb) v =
+let insert (env: #IDb) user =
     task {
         let query = """
             INSERT INTO Users
@@ -83,7 +83,7 @@ let insert (env: #IDb) v =
             VALUES
                 (@id, @email, @password, @is_admin, @created_on, @updated_on); """
 
-        return! env.db.execute query v
+        return! env.db.execute query user
     }
 
 let delete (env: #IDb) id =

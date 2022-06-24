@@ -18,7 +18,7 @@ let private execute (connection: #DbConnection) (sql: string) data =
         | ex -> return Error ex
     }
 
-let private query (connection: #DbConnection) (sql: string) (parameters: IDictionary<string, obj> option) =
+let private query (connection: #DbConnection) (sql: string) (parameters: 'a option) =
     task {
         try
             let! res =
@@ -30,7 +30,7 @@ let private query (connection: #DbConnection) (sql: string) (parameters: IDictio
         | ex -> return Error ex
     }
 
-let private querySingle (connection: #DbConnection) (sql: string) (parameters: IDictionary<string, obj> option) =
+let private querySingle (connection: #DbConnection) (sql: string) (parameters: 'a option) =
     task {
         try
             let! res =
@@ -47,8 +47,8 @@ let private querySingle (connection: #DbConnection) (sql: string) (parameters: I
 
 type IDatabase =
     abstract execute : string -> 'a -> Task<Result<int,exn>>
-    abstract query : string -> IDictionary<string, obj> option -> Task<Result<'a list, exn>>
-    abstract querySingle : string -> IDictionary<string, obj> option -> Task<Result<'a option, exn>>
+    abstract query : string -> 'a option -> Task<Result<'b list, exn>>
+    abstract querySingle : string -> 'a option -> Task<Result<'b option, exn>>
 
 type IDb =
     abstract db: IDatabase

@@ -41,7 +41,7 @@ let getAllForUser (env: #IDb) (userId: Guid) =
             FROM Recipients
             WHERE user_id = @userId;
         """
-        let! recipients = env.db.query sql (dict ["userId" => userId] |> Some)
+        let! recipients = env.db.query sql (Some {| userId = userId |})
 
         return recipients |> List.map toRecipient
     }
@@ -57,7 +57,7 @@ let getAllForIdea (env: #IDb) (ideaId: Guid) =
                 ir.idea_id = @ideaId
         """
 
-        let! recipients = env.db.query sql (dict ["ideaId" => ideaId] |> Some)
+        let! recipients = env.db.query sql (Some {| ideaId = ideaId |})
         return recipients |> List.map toRecipient
     }
 
@@ -69,7 +69,7 @@ let getById (env: #IDb) (id: Guid) =
             WHERE id = @id;
         """
 
-        let! recipients = env.db.querySingle sql (dict ["id" => id] |> Some)        
+        let! recipients = env.db.querySingle sql (Some {| id = id |})
         return recipients |> Option.map toRecipient
     }
 
