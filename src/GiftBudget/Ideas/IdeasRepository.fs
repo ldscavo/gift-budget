@@ -56,6 +56,12 @@ let getRecipientsForIdea (env: #IDb) (idea: Idea) =
                 Recipient = recipients |> toIdeaRecipients }
     }
 
+let getRecipientsForIdeaOption (env: #IDb) (idea: Idea) =
+    taskResult {
+        let! ideaWithRecipients = idea |> getRecipientsForIdea env
+        return Some ideaWithRecipients
+    }
+
 let getAllForUser (env: #IDb) (userId: Guid) :  Task<Result<Idea list, exn>> =
     taskResult {
         let sql = """
@@ -84,4 +90,19 @@ let getAllForRecipient (env: #IDb) (recipientId: Guid) =
         let! ideaDataModels = env.db.query sql (dict ["recipientId" => recipientId] |> Some)
         let ideas = ideaDataModels |> List.map toIdea
         return! ideas |> List.traverseTaskResultM (getRecipientsForIdea env)
+    }
+
+let getById (env: #IDb) (id: Guid) =
+    taskResultOption {
+        let sql = """
+            SELECT
+                id, user_id, text, price, link, created_on, updated_on
+            FROM ideas
+            WHERE id = @id
+        """
+
+        let! ideaDataModel = env.db.querySingle sql (dict ["id" => id] |> Some)
+        let idea = ideaDataModel |>  toIdea
+
+        return! idea |> (getRecipientsForIdeaOption env)
     }
