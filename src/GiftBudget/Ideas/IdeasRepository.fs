@@ -106,3 +106,41 @@ let getById (env: #IDb) (id: Guid) =
 
         return! idea |> (getRecipientsForIdeaOption env)
     }
+
+let addRecipient (env: #IDb) ideaId recipientId =
+    taskResult {
+        let sql = """
+            INSERT INTO idearecipients
+                (idea_id, recipient_id)
+            VALUES
+                (@ideaId, @recipientId)
+        """
+
+        let! _ = env.db.execute sql {| ideaId = ideaId; recipientId = recipientId |}
+        return ()
+    }
+
+let insert (env: #IDb) idea =
+    taskResult {
+        let sql = """
+            INSERT INTO ideas
+                (id, user_id, text, price, link, created_on, updated_on
+            VALUES
+                (@id, @user_id, @text, @price, @link, @created_on, @updated_on)
+        """
+
+        let! result = env.db.execute sql (idea |> fromIdea)
+
+        match idea.Recipient with
+        | IdeaRecipient recipient ->
+            do! addRecipient env idea.Id recipient.Id
+        | IdeaRecipients recipients ->
+            let! _ =
+                recipients
+                |> List.map (fun r -> r.Id)
+                |> List.traverseTaskResultM (addRecipient env idea.Id)
+            ()
+        | NoRecipient -> ()
+
+        return result
+    }
