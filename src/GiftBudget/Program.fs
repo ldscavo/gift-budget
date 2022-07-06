@@ -15,8 +15,8 @@ let endpointPipe =
 let app =
     let port = Env.get "PORT" ??- "8085"
     let connectionString =
-        Env.get "DATABASE_URL"
-        |> Option.bind Shared.Database.connString
+        Env.unsafeGet "DATABASE_URL"
+        |> Shared.Database.connString
         |> Option.get // throws if None
 
     let authOptions (options: Cookies.CookieAuthenticationOptions) =
