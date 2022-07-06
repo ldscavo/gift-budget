@@ -2,6 +2,11 @@
 
 open System
 open Recipients
+open System.Threading.Tasks
+open FsToolkit.ErrorHandling
+
+type IIdea =
+    abstract Text: string
 
 type IdeaRecipient =
     | IdeaRecipient of Recipient
@@ -19,8 +24,11 @@ type Idea =
       CreatedOn: DateTime
       UpdatedOn: DateTime }
 
+    interface IIdea with
+        member this.Text = this.Text
+
 module Validation =
-    let private textMustNotBeEmpty idea =
+    let private textMustNotBeEmpty (idea: IIdea) =
         if String.IsNullOrWhiteSpace idea.Text then
             Some ("text", "Idea must have some text")
         else
@@ -37,3 +45,34 @@ module Validation =
                 | Some (key, msg) -> acc |> Map.add key msg
                 | None -> acc)
             Map.empty
+
+type private RecipientsFunc = Guid list -> Task<Result<Recipient list, exn>>
+
+[<CLIMutable>]
+type IdeaInput =
+    { text: string
+      price: decimal option
+      link: string option
+      recipients: Guid list }
+
+    interface IIdea with
+        member this.Text = this.text
+
+    member this.toIdea (r: RecipientsFunc) userId =
+        taskResult {
+            let! recipients = r this.recipients
+
+            return
+                { Id = Guid.NewGuid ()
+                  UserId = userId
+                  Text = this.text
+                  Price = this.price
+                  Link = this.link
+                  Recipient =
+                    match recipients with
+                    | [] -> NoRecipient
+                    | [ recipient ] -> IdeaRecipient recipient
+                    | _ -> IdeaRecipients recipients
+                  CreatedOn = DateTime.Now
+                  UpdatedOn = DateTime.Now }
+        }        
