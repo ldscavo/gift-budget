@@ -10,9 +10,7 @@ open Recipients
 
 let private showRecipientList env (ctx: HttpContext) =
     task {
-        let userId = getLoggedInUserId ctx
-
-        let! maybeRecipients = Repository.getAllForUser env userId        
+        let! maybeRecipients = Repository.getAllForUser env ctx.UserId        
         
         match maybeRecipients with
         | Ok recipients ->
@@ -26,10 +24,13 @@ let private detail env (ctx: HttpContext) (id: Guid) =
     task {
         let! maybeRecipient = Repository.getById env id
 
-        match maybeRecipient with
-        | Ok (Some recipient) -> return! Controller.renderHtml ctx (Views.recipientDetail ctx recipient)
-        | Ok None -> return! Controller.renderHtml ctx NotFound.layout
-        | Error ex -> return! Controller.renderHtml ctx (InternalError.layout ex)
+        let view = 
+            match maybeRecipient with
+            | Ok (Some recipient) -> Views.recipientDetail ctx recipient
+            | Ok None -> NotFound.layout
+            | Error ex -> InternalError.layout ex
+
+        return! Controller.renderHtml ctx view
     }     
 
 let private addRecipient (ctx: HttpContext) =
@@ -44,8 +45,7 @@ let private createRecipient env (ctx: HttpContext) =
         let validationResult = Validation.validate input
 
         if validationResult.IsEmpty then
-            let userId = getLoggedInUserId ctx
-            let recipient = input.toRecipient(userId)            
+            let recipient = input.toRecipient ctx.UserId            
 
             let! result = Repository.insert env recipient
             match result with

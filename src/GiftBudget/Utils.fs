@@ -3,7 +3,8 @@
 open System
 open Microsoft.AspNetCore.Http
 
-let getLoggedInUserId (ctx: HttpContext) =
-    ctx.User.FindFirst "userId"
-    |> fun claim -> claim.Value
-    |> Guid.Parse
+type HttpContext with
+    member this.UserId =
+        this.User.FindFirst "userId"
+        |> fun claim -> claim.Value
+        |> Guid.Parse
