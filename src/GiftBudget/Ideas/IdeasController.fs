@@ -1,24 +1,24 @@
 ﻿module Ideas.Controller
 
-open System
 open Utils
 open Saturn
 open Ideas
+open FsToolkit.ErrorHandling
+open Microsoft.AspNetCore.Http
 
-let private showIdeaList env ctx =
+let private showIdeaList env (ctx: HttpContext) =
     task {
-        let userId = getLoggedInUserId ctx
-        let! maybeIdeas = Repository.getAllForUser env userId
+        let! maybeIdeas = Repository.getAllForUser env ctx.UserId
 
-        match maybeIdeas with
-        | Ok ideas ->
-            let view = Views.ideasList ctx ideas
-            return! Controller.renderHtml ctx view
-        | Error ex ->
-            return! Controller.renderHtml ctx (InternalError.layout ex)
+        let view = 
+            match maybeIdeas with
+            | Ok ideas -> Views.ideasList ctx ideas
+            | Error ex -> InternalError.layout ex
+
+        return! Controller.renderHtml ctx view
     }
 
-let private detail env ctx id =
+let private showIdeaDetail env ctx id =
     task {
         let! maybeIdea = Repository.getById env id
 
@@ -31,8 +31,37 @@ let private detail env ctx id =
         return! Controller.renderHtml ctx view
     }
 
+let private addIdea ctx =
+    task {
+        let view = Views.addEditIdea ctx None None Map.empty
+        return! Controller.renderHtml ctx view
+    }
+
+let private createIdea env ctx =
+    task {
+        let! input = Controller.getModel<IdeaInput> ctx
+        let validationResult = Validation.validate input
+        
+        if validationResult.IsEmpty then
+            let! result =
+                input.toIdea (Recipients.Repository.getByIds env) ctx.UserId
+                |> TaskResult.bind (Repository.insert env)
+
+            match result with
+            | Ok _ ->
+                return! Controller.redirect ctx "/ideas"
+            | Error _ ->
+                let view = Views.addEditIdea ctx None (Some input) Map.empty
+                return! Controller.renderHtml ctx view
+        else
+            let view = Views.addEditIdea ctx None (Some input) validationResult
+            return! Controller.renderHtml ctx view                
+    }
+
 let resource env =
     controller {
         index (showIdeaList env)
-        show (detail env)
+        show (showIdeaDetail env)
+        add addIdea
+        create (createIdea env)
     }

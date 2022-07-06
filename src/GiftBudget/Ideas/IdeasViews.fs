@@ -3,25 +3,46 @@
 open Giraffe.ViewEngine
 open Saturn
 
-let ideaCard ctx idea =
-    div [_class "card"] [
-        div [_class "card-content"] [
-            div [_class "media"] [
-                div [_class "media-content"] [
-                    p [_class "title is-4"] [
-                        a [_href (Links.withId ctx idea.Id)] [
-                            str idea.Text
-                        ]
-                    ]                        
-                ]
-            ]
+let ideaLink url =
+    span [_class "icon-text"] [
+        a [_href url; _target "_blank"] [
+            span [_class "icon "] [ i [_class "fas fa-link"] [] ]
+        ]
+    ]
+
+let ideaRow ctx idea =
+    tr [] [
+        td [] [
+            str idea.Text
+            match idea.Link with
+            | Some linkUrl -> ideaLink linkUrl
+            | None -> span [] []
+        ]
+        td [] [
+            match idea.Price with
+            | Some price -> str (price.ToString "C")
+            | None -> str ""
+        ]
+        td [] [
+            match idea.Recipient with
+            | NoRecipient -> str ""
+            | IdeaRecipient recipient -> str recipient.Name
+            | IdeaRecipients recipients ->
+                str (recipients |> List.map (fun r -> r.Name) |> String.concat ", ")
         ]
     ]
 
 let ideasList ctx ideas =
     App.layout [
         h1 [_class "title"] [str "Ideas"]
-        div [] (ideas |> List.map (ideaCard ctx))
+        table [_class "table"] [
+            thead [] [
+                th [] [str "Idea"]
+                th [] [str "Price"]
+                th [] [str "Recipient"]
+            ]
+            tbody [] (ideas |> List.map (ideaRow ctx))
+        ]
     ]
     
 let ideaDetail ctx idea =
@@ -34,4 +55,9 @@ let ideaDetail ctx idea =
             div [] (recipients |> List.map (fun r -> p [] [str r.Name]))
         | NoRecipient ->
             span [] []
+    ]
+
+let addEditIdea ctx (maybeIdea: Idea option) (input: IdeaInput option) (errors: Map<string, string>) =
+    App.layout [
+        
     ]
