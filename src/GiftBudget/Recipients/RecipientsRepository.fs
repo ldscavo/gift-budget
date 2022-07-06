@@ -73,6 +73,18 @@ let getById (env: #IDb) (id: Guid) =
         return recipients |> Option.map toRecipient
     }
 
+let getByIds (env: #IDb) (ids: Guid list) =
+    taskResult {
+        let sql = """
+            SELECT id, user_id, name, notes, created_on, updated_on
+            FROM Recipients
+            WHERE id in @ids;
+        """
+
+        let! recipients = env.db.query sql (Some {| ids = ids |})
+        return recipients |> List.map toRecipient
+    }
+
 let insert (env: #IDb) (recipient: Recipient) =
     task {
         let sql = """
