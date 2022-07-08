@@ -45,7 +45,9 @@
     <PackageReference Include="FsToolkit.ErrorHandling" Version="2.13.0" />
     <PackageReference Include="FsToolkit.ErrorHandling.TaskResult" Version="2.13.0" />
     <PackageReference Include="Giraffe" Version="5.0.0" />
+    <PackageReference Include="Giraffe.Htmx" Version="1.7.0" />
     <PackageReference Include="Giraffe.ViewEngine" Version="1.4.0" />
+    <PackageReference Include="Giraffe.ViewEngine.Htmx" Version="1.7.0" />
     <PackageReference Include="Npgsql" Version="6.0.2" />
     <PackageReference Include="Saturn" Version="0.15.0" />
     <PackageReference Include="Saturn.Extensions.Authorization" Version="0.15.0" />
