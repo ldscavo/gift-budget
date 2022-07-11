@@ -63,6 +63,27 @@ let private showRegister ctx =
         return! Controller.renderHtml ctx view
     }
 
+let private attemptRegistation env ctx =
+    task {
+        let! input = Controller.getModel<Register> ctx
+
+        let validationResults = input |> Validation.validate
+
+        if validationResults.IsEmpty then
+            let user = input |> createUserFromRegistration
+            let! result = user |> Database.insert env
+
+            match result with
+            | Ok _ ->
+                do! signInAuthorizedUser user ctx
+                return!  Controller.redirect ctx "/recipients"
+            | Error ex ->
+                return! Controller.renderHtml ctx (InternalError.layout ex)
+        else
+            let view = Views.register ctx (Some input) validationResults
+            return! Controller.renderHtml ctx view        
+    }
+
 let private logoutUser (ctx: HttpContext) =
     task {
         let! _ = AuthenticationHttpContextExtensions.SignOutAsync ctx
@@ -78,7 +99,7 @@ let login env =
 let register env =
     controller {
         index showRegister
-        //create (attemptLogin env)
+        create (attemptRegistation env)
     }
 
 let logout =
