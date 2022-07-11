@@ -54,4 +54,19 @@ let tests = testList "UsersService tests" [
             
             Expect.equal result (LoginError ex) "The exception is carried into the LoginError"
     ]
+    
+    testList "Registration tests" [
+        let registration =
+            { email = "test@example.com"
+              password = "hunter1"
+              passwordConfirm = "hunter1" }
+
+        testCase "A new user from registration has the correct email" <| fun _ ->
+            let user = registration |> createUserFromRegistration
+            Expect.equal user.Email registration.email "Emails are the same"
+
+        testCase "A new user from registration has the correct password hash" <| fun _ ->
+            let user = registration |> createUserFromRegistration
+            Expect.isTrue (BCrypt.Verify(registration.password, user.Password)) "Password is valid against new hash"
+    ]
 ]
