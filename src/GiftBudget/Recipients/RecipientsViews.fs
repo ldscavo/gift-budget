@@ -5,34 +5,33 @@ open Saturn
 open Recipients
 
 let recipientCard ctx recipient =
-    div [_class "tile is-parent"] [
-        div [_class "tile is-child"] [
-            div [_class "card"] [
-                div [_class "card-content"] [
-                    div [_class "media"] [
-                        div [_class "media-content"] [
-                            p [_class "title is-4"] [
-                                str recipient.Name
-                            ]                        
-                        ]
+    div [_class "column is-narrow"] [
+        div [_class "card"] [
+            div [_class "card-content"] [
+                div [_class "media"] [
+                    div [_class "media-content"] [
+                        p [_class "title is-4"] [
+                            str recipient.Name
+                        ]                        
                     ]
-                    match recipient.Notes with
-                    | Some notes -> div [_class "content"] [ str notes ]
-                    | None -> span [] []
-                ]        
-                div [_class "card-footer"] [
-                    a [_class "card-footer-item"; _href (Links.withId ctx recipient.Id)] [
-                        span [_class "icon"] [ i [_class "fas fa-user"] [] ]
-                        str "View Details"
-                    ]
-                    a [_class "card-footer-item"; _href "#"] [
-                        span [_class "icon"] [ i [_class "fas fa-lightbulb"] [] ]
-                        str "Add Idea"
-                    ]
+                ]
+                match recipient.Notes with
+                | Some notes -> div [_class "content"] [ str notes ]
+                | None -> span [] []
+            ]        
+            div [_class "card-footer"] [
+                a [_class "card-footer-item"; _href (Links.withId ctx recipient.Id)] [
+                    span [_class "icon"] [ i [_class "fas fa-user"] [] ]
+                    str "Details"
+                ]
+                a [_class "card-footer-item"; _href "#"] [
+                    span [_class "icon"] [ i [_class "fas fa-lightbulb"] [] ]
+                    str "Add Idea"
                 ]
             ]
         ]
     ]
+    
 
 let recipientsList ctx recipients =
     let recipientCardList = 
@@ -47,7 +46,7 @@ let recipientsList ctx recipients =
                 span [_class "icon is-small ml-4"] [ i [_class "fas fa-square-plus"] [] ]
             ]
         ]
-        div [_class "tile is-ancestor"] recipientCardList                  
+        div [_class "columns is-multiline"] recipientCardList                  
     ]
 
 let recipientDetail ctx recipient =
@@ -80,7 +79,12 @@ let addEditRecipient ctx maybeRecipient maybeInput errors =
                         div [_class "field"] [
                             label [_class "label"] [str "Name"]
                             div [_class "control"] [
-                                input [_class "input"; _type "text"; _name "name"; _placeholder "John Doe"; _value vals.name]
+                                input
+                                    [ _class "input"
+                                      _type "text"
+                                      _name "name"
+                                      _placeholder "John Doe"
+                                      _value vals.name ]
                             ]
                             if Map.containsKey "name" errors then
                                 p [ _class "help is-danger" ] [ str errors.["name"] ]
@@ -89,7 +93,9 @@ let addEditRecipient ctx maybeRecipient maybeInput errors =
                         div [_class "field"] [
                             label [_class "label"] [str "Notes*"]
                             div [_class "control"] [
-                                textarea [_class "textarea"; _name "notes"] [str (vals.notes |> Option.defaultValue "")]
+                                textarea
+                                    [_class "textarea"; _name "notes"]
+                                    [str (vals.notes |> Option.defaultValue "")]
                             ]
                         ]
                         div [_class "field is-grouped"] [
