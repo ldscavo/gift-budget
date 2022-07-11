@@ -57,6 +57,12 @@ let private attemptLogin env (ctx: HttpContext) =
             return! Controller.renderHtml ctx (InternalError.layout ex)
     }
 
+let private showRegister ctx =
+    task {
+        let view = Views.register ctx None Map.empty
+        return! Controller.renderHtml ctx view
+    }
+
 let private logoutUser (ctx: HttpContext) =
     task {
         let! _ = AuthenticationHttpContextExtensions.SignOutAsync ctx
@@ -67,6 +73,12 @@ let login env =
     controller {
         index showLogin
         create (attemptLogin env)
+    }
+
+let register env =
+    controller {
+        index showRegister
+        //create (attemptLogin env)
     }
 
 let logout =

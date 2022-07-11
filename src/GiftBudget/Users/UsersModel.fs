@@ -31,6 +31,16 @@ type Login =
         member x.Email = x.email
         member x.Password = x.password
 
+[<CLIMutable>]
+type Register =
+    { email: string
+      password: string
+      passwordConfirm: string }
+
+    interface ILogin with
+        member x.Email = x.email
+        member x.Password = x.password
+
 module Validation =    
     open System
     open System.Text.RegularExpressions

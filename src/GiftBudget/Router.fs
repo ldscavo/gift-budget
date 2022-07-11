@@ -24,6 +24,7 @@ let defaultView env =
 
         // routes that do not require being logged in
         forward "/login" (Users.Controller.login env)
+        forward "/register" (Users.Controller.register env)
     }
 
 let loggedInRouter env =
