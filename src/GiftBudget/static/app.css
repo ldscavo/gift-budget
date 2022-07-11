@@ -13,7 +13,9 @@
     text-shadow: 1px 1px #2c3e50;
 }
 
-#nav .navbar-item:hover {
+#nav .navbar-item:hover,
+#nav .navbar-item:active,
+#nav .navbar-item:focus {
     background: #42babd;
 }
 
