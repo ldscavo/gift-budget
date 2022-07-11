@@ -6,7 +6,6 @@ open Microsoft.AspNetCore.Authentication.Cookies
 
 let browser =
     pipeline {
-        plug acceptHtml
         plug putSecureBrowserHeaders
         plug fetchSession
         set_header "x-pipeline-type" "Browser"
