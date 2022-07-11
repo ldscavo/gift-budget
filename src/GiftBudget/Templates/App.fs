@@ -44,23 +44,20 @@ let layout content =
                         ]
                     ]
                     div [_class "navbar-end"] [
-                        a [_class "navbar-item"; _href "/logout"] [str "Logout"]
+                        a [_class "navbar-item"; _href "/logout"; _hxNoBoost] [str "Logout"]
                     ]
                 ]
             ]
-            div [_class "columns"] [
-                div [_class "column"] [
-                    aside [_class "menu"] [
-                        ul [_class "menu-list"] [
-                            li [] [a [_href "/recipients"] [str "Recipients"]]
-                            li [] [a [_href "/ideas"] [str "Ideas"]]
-                            li [] [a [_href "#"] [str "Budgets"]]
-                        ]
+            div [_class "section"] [
+                div [_id "container"] content
+            ]
+            div [_class "footer"] [
+                div [_class "content has-text-centered"] [
+                    p [] [
+                        strong [] [str "Gift Budget"]
+                        str " by Logan Scavo. Source code available on "
+                        a [_href "https://github.com/ldscavo/gift-budget"; _target "_blank"] [str "GitHub"]
                     ]
-                ]                
-                div [_class "column is-four-fifths"] [
-                    div [_id "container"]
-                        content
                 ]
             ]
             script [_src "/app.js"] []
