@@ -47,21 +47,25 @@ module Validation =
 
     let emailRegex = Regex("\w+@\w+\.\w+")
 
-    let validate (user: ILogin) =
+    let validate (registration: Register) =
         let validators = [
-            fun (u: ILogin) ->
-                if String.IsNullOrWhiteSpace u.Password then Some ("password", "Password shouldn't be empty")
+            fun r ->
+                if String.IsNullOrWhiteSpace r.password then Some ("password", "Password shouldn't be empty")
                 else None
 
-            fun (u: ILogin) ->
-                if emailRegex.IsMatch u.Email then None
+            fun r ->
+                if emailRegex.IsMatch r.email then None
                 else Some ("email", "Email address is invalid")
+
+            fun r ->
+                if r.password = r.passwordConfirm then None
+                else Some ("passwordConfirm", "Passwords do not match")
         ]
 
         validators
         |> List.fold
             (fun acc validation ->
-                match validation user with
+                match validation registration with
                 | Some (key, msg) -> acc |> Map.add key msg
                 | None -> acc)
             Map.empty
