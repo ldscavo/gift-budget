@@ -4,7 +4,8 @@ open Database
 open FSharp.Control.Tasks
 open FsToolkit.ErrorHandling
 
-type private UserDto =
+[<CLIMutable>]
+type UserDto =
     { id: System.Guid
       email: string
       password: string
@@ -12,7 +13,7 @@ type private UserDto =
       created_on: System.DateTime
       updated_on: System.DateTime }
 
-let private toUser (u: UserDto) =
+let toUser (u: UserDto) =
     { Id = u.id
       Email = u.email
       Password = u.password
@@ -22,6 +23,17 @@ let private toUser (u: UserDto) =
           | false -> User
       CreatedOn = u.created_on
       UpdatedOn = u.updated_on }
+
+let fromUser (u: User) =
+    { id = u.Id
+      email = u.Email
+      password = u.Password
+      is_admin =
+        match u.Type with
+        | User -> false
+        | Admin -> true
+      created_on = u.CreatedOn
+      updated_on = u.UpdatedOn }
 
 let getAll (env: #IDb) =
     taskResult {
@@ -81,9 +93,10 @@ let insert (env: #IDb) user =
             INSERT INTO Users
                 (id, email, password, is_admin, created_on, updated_on)
             VALUES
-                (@id, @email, @password, @is_admin, @created_on, @updated_on); """
+                (@id, @email, @password, @is_admin, @created_on, @updated_on)
+        """
 
-        return! env.db.execute query user
+        return! env.db.execute query (user |> fromUser)
     }
 
 let delete (env: #IDb) id =
