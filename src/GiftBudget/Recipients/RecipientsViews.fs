@@ -40,7 +40,7 @@ let recipientsList ctx recipients =
         | [] -> [ div [] [str "You've not added any recipients yet!"] ]
         | _ -> recipients |> List.map (recipientCard ctx) 
 
-    App.layout [
+    App.template ctx [
         h1 [_class "title"] [
             str "Recipients"
             a [_href (Links.add ctx)] [
@@ -51,7 +51,7 @@ let recipientsList ctx recipients =
     ]
 
 let recipientDetail ctx recipient =
-    App.layout [
+    App.template ctx [
         h1 [_class "title"] [str recipient.Name]
         match recipient.Notes with
         | Some notes -> p [] [str notes]
@@ -66,7 +66,7 @@ let addEditRecipient ctx maybeRecipient maybeInput errors =
         | None, Some i -> {| name = i.name; notes = (Some i.notes) |}
         | None, None -> {| name = ""; notes = None |}
 
-    App.layout  [
+    App.template ctx  [
         div [_class "modal is-active"] [
             div [_class "modal-background"] []
             div [_class "modal-content"] [

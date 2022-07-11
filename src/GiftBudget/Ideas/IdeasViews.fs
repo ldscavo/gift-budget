@@ -27,13 +27,12 @@ let ideaRow ctx idea =
             match idea.Recipient with
             | NoRecipient -> str ""
             | IdeaRecipient recipient -> str recipient.Name
-            | IdeaRecipients recipients ->
-                str (recipients |> List.map (fun r -> r.Name) |> String.concat ", ")
+            | IdeaRecipients recipients -> str (recipients |> List.map (fun r -> r.Name) |> String.concat ", ")
         ]
     ]
 
 let ideasList ctx ideas =
-    App.layout [
+    App.template ctx [
         h1 [_class "title"] [str "Ideas"]
         table [_class "table"] [
             thead [] [
@@ -46,7 +45,7 @@ let ideasList ctx ideas =
     ]
     
 let ideaDetail ctx idea =
-    App.layout [
+    App.template ctx [
         h1 [_class "title"] [str idea.Text]
         match idea.Recipient with
         | IdeaRecipient recipient ->
@@ -58,6 +57,6 @@ let ideaDetail ctx idea =
     ]
 
 let addEditIdea ctx (maybeIdea: Idea option) (input: IdeaInput option) (errors: Map<string, string>) =
-    App.layout [
+    App.template ctx [
         
     ]

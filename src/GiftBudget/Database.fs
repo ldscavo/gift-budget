@@ -2,7 +2,6 @@ module Database
 
 open Dapper
 open System.Data.Common
-open System.Collections.Generic
 open System.Threading.Tasks
 open FSharp.Control.Tasks
 open Npgsql
