@@ -1,6 +1,9 @@
 module App
 
 open Giraffe.ViewEngine
+open Giraffe.ViewEngine.Htmx
+open Giraffe.Htmx
+open Microsoft.AspNetCore.Http
 
 let layoutHead =
     head [] [
@@ -11,12 +14,13 @@ let layoutHead =
         link [_rel "stylesheet"; _href "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"]
         link [_rel "stylesheet"; _href "/app.css"]
         link [_rel "stylesheet"; _href "/all.min.css"]
+        script [_src "https://unpkg.com/htmx.org@1.7.0"] []
     ]
 
 let layout content =
     html [] [
         layoutHead
-        body [] [
+        body [_hxBoost; _hxTarget "#container"] [
             nav [_id "nav"; _class "navbar"] [
                 div [_class "navbar-brand"] [
                     a [_class "navbar-item"; _href "/"] [
@@ -55,10 +59,15 @@ let layout content =
                     ]
                 ]                
                 div [_class "column is-four-fifths"] [
-                    div [_class "container"]
+                    div [_id "container"]
                         content
                 ]
             ]
             script [_src "/app.js"] []
         ]
     ]
+
+let template (ctx: HttpContext) content =
+    match ctx.Request.IsHtmx && not ctx.Request.IsHtmxRefresh with
+    | false -> layout content
+    | true -> div [] content
