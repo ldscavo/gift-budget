@@ -68,3 +68,17 @@ let template (ctx: HttpContext) content =
     match ctx.Request.IsHtmx && not ctx.Request.IsHtmxRefresh with
     | false -> layout content
     | true -> div [] content
+
+let private modalTemplate (ctx: HttpContext) content =
+    [ div [_class "modal is-active"] [
+        div [_class "modal-background"] []
+        div [_class "modal-content"] [
+            div [_class "box"] content
+        ]
+        a [_class "modal-close is-large"; _href (Saturn.Links.index ctx)] []
+    ] ] |> layout
+
+let modal (ctx: HttpContext) content =
+    match ctx.Request.IsHtmx && not ctx.Request.IsHtmxRefresh with
+    | false -> modalTemplate ctx content
+    | true -> div [] content
