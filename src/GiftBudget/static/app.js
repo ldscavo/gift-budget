@@ -1,46 +1,31 @@
-function addNavbarBurger () {
-  // Get all "navbar-burger" elements
-  var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+var openModal = () => {    
+    setTimeout(() => {
+        document.getElementById("modal").classList.add("is-active");
+    }, 10);
+};
 
-  // Check if there are any navbar burgers
-  if ($navbarBurgers.length > 0) {
+var closeModal = () => {
+    document.getElementById("modal").classList.remove("is-active");
+};
 
-    // Add a click event on each of them
-    $navbarBurgers.forEach(function ($el) {
-      $el.addEventListener('click', function () {
-
-        // Get the target from the "data-target" attribute
-        var target = $el.dataset.target;
-        var $target = document.getElementById(target);
-
-        // Toggle the class on both the "navbar-burger" and the "navbar-menu"
-        $el.classList.toggle('is-active');
-        $target.classList.toggle('is-active');
-
-      });
+var addListeners = () => {
+    document.querySelectorAll(".modal-link").forEach(modalLink => {
+        modalLink.addEventListener('htmx:afterOnLoad', openModal);
     });
-  }
-}
 
-function addDeleteButtons () {
-  var $deleteButtons = Array.prototype.slice.call(document.querySelectorAll('.is-delete'), 0);
-  if ($deleteButtons.length > 0) {
-    $deleteButtons.forEach(function($el) {
-      $el.addEventListener('click', function () {
-        var target = $el.dataset.href;
-        var xhr = new XMLHttpRequest();
-        xhr.open("DELETE", target, true);
-        xhr.setRequestHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-        xhr.onload = function () {
-          window.location.reload(false);
+    document.querySelectorAll(".exit-modal").forEach(close => {
+        close.addEventListener("click", closeModal);
+    });
+
+    document.getElementById("modal-background").addEventListener("click", closeModal);
+
+    document.addEventListener("keyup", e => {
+        if (e.key === "Escape") {
+            closeModal();
         }
-        xhr.send(null);
-      });
     });
-  }
-}
+};
 
-document.addEventListener('DOMContentLoaded', function () {
-  addNavbarBurger();
-  addDeleteButtons();
-});
+document.addEventListener("htmx:afterOnLoad", addListeners);
+
+addListeners();

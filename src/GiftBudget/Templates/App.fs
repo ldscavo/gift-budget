@@ -15,7 +15,17 @@ let layoutHead =
         link [_rel "stylesheet"; _href "/app.css"]
         link [_rel "stylesheet"; _href "/all.min.css"]
         script [_src "https://unpkg.com/htmx.org@1.7.0"] []
+        script [_src "/app.js"] []
     ]
+
+let private modalTemplate content =
+    [ div [_id "modal"; _class "modal"] [
+        div [_id "modal-background"; _class "modal-background"] []
+        div [_class "modal-content"] [
+            div [_id "modal-content"; _class "box"] content
+        ]
+        a [_id "modal-close"; _class "exit-modal modal-close is-large"] []
+    ] ]
 
 let layout content =
     html [] [
@@ -50,6 +60,7 @@ let layout content =
             ]
             div [_class "section"] [
                 div [_id "container"] content
+                div [] (modalTemplate [])
             ]
             div [_class "footer"] [
                 div [_class "content has-text-centered"] [
@@ -67,18 +78,4 @@ let layout content =
 let template (ctx: HttpContext) content =
     match ctx.Request.IsHtmx && not ctx.Request.IsHtmxRefresh with
     | false -> layout content
-    | true -> div [] content
-
-let private modalTemplate (ctx: HttpContext) content =
-    [ div [_class "modal is-active"] [
-        div [_class "modal-background"] []
-        div [_class "modal-content"] [
-            div [_class "box"] content
-        ]
-        a [_class "modal-close is-large"; _href (Saturn.Links.index ctx)] []
-    ] ] |> layout
-
-let modal (ctx: HttpContext) content =
-    match ctx.Request.IsHtmx && not ctx.Request.IsHtmxRefresh with
-    | false -> modalTemplate ctx content
     | true -> div [] content

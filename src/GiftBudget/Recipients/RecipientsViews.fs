@@ -1,6 +1,8 @@
 ﻿module Recipients.Views
 
 open Giraffe.ViewEngine
+open Giraffe.ViewEngine.Htmx
+open Giraffe.Htmx
 open Saturn
 open Recipients
 
@@ -44,9 +46,13 @@ let recipientsList ctx recipients =
     App.template ctx [
         h1 [_class "title"] [
             str "Recipients"
-            a [_href (Links.add ctx)] [
-                span [_class "icon is-small ml-4"] [ i [_class "fas fa-square-plus"] [] ]
-            ]
+            a
+                [ _class "modal-link"
+                  _href (Links.add ctx)
+                  _hxGet (Links.add ctx)
+                  _hxTarget "#modal-content"
+                  _hxTrigger "click" ]
+                [ span [_class "icon is-small ml-4"] [ i [_class "fas fa-square-plus"] [] ] ]
         ]
         div [_class "columns is-multiline"] recipientCardList                  
     ]
@@ -67,7 +73,7 @@ let addEditRecipient ctx maybeRecipient maybeInput errors =
         | None, Some i -> {| name = i.name; notes = (Some i.notes) |}
         | None, None -> {| name = ""; notes = None |}
 
-    App.modal ctx  [
+    App.template ctx  [
         div [] [
             h1 [_class "title"] [
                 match maybeRecipient with
@@ -102,7 +108,9 @@ let addEditRecipient ctx maybeRecipient maybeInput errors =
                         button [_class "button is-link"; _type "submit"] [str "Save"]
                     ]
                     div [_class "control"] [
-                        a [_class "button is-link is-light"; _href (Links.index ctx)] [str "Cancel"]
+                        match ctx.Request.IsHtmx with
+                        | false -> a [_class "button is-link is-light"; _href (Links.index ctx)] [str "Cancel"]
+                        | true -> button [_class "exit-modal button is-light"; _type "button"] [str "Cancel"]
                     ]
                 ]
             ]
