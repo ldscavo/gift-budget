@@ -34,27 +34,22 @@ let recipientCard ctx recipient =
                 ]
             ]
         ]
-    ]
-    
+    ]    
 
 let recipientsList ctx recipients =
-    let recipientCardList = 
-        match recipients with
-        | [] -> [ div [] [str "You've not added any recipients yet!"] ]
-        | _ -> recipients |> List.map (recipientCard ctx) 
-
     App.template ctx [
         h1 [_class "title"] [
             str "Recipients"
-            a
-                [ _class "modal-link"
-                  _href (Links.add ctx)
-                  _hxGet (Links.add ctx)
-                  _hxTarget "#modal-content"
-                  _hxTrigger "click" ]
-                [ span [_class "icon is-small ml-4"] [ i [_class "fas fa-square-plus"] [] ] ]
+            Components.modalLink (Links.add ctx) [
+                span [_class "icon is-small ml-4"] [
+                    i [_class "fas fa-square-plus"] []
+                ]
+            ]
         ]
-        div [_class "columns is-multiline"] recipientCardList                  
+        div [_class "columns is-multiline"] <|
+            match recipients with
+            | [] -> [ div [] [str "You've not added any recipients yet!"] ]
+            | _ -> recipients |> List.map (recipientCard ctx) 
     ]
 
 let recipientDetail ctx recipient =

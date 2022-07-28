@@ -35,8 +35,10 @@ let ideasList ctx ideas =
     App.template ctx [
         h1 [_class "title"] [
             str "Ideas"
-            a [_href (Links.add ctx)] [
-                span [_class "icon is-small ml-4"] [ i [_class "fas fa-square-plus"] [] ]
+            Components.modalLink (Links.add ctx) [
+                span [_class "icon is-small ml-4"] [
+                    i [_class "fas fa-square-plus"] []
+                ]
             ]
         ]
         table [_class "table"] [
