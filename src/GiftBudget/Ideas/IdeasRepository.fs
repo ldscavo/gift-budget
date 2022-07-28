@@ -124,23 +124,14 @@ let insert (env: #IDb) idea =
     taskResult {
         let sql = """
             INSERT INTO ideas
-                (id, user_id, text, price, link, created_on, updated_on
+                (id, user_id, text, price, link, created_on, updated_on)
             VALUES
                 (@id, @user_id, @text, @price, @link, @created_on, @updated_on)
         """
 
-        let! result = env.db.execute sql (idea |> fromIdea)
+        let ideaInput = idea |> fromIdea
 
-        match idea.Recipient with
-        | IdeaRecipient recipient ->
-            do! addRecipient env idea.Id recipient.Id
-        | IdeaRecipients recipients ->
-            let! _ =
-                recipients
-                |> List.map (fun r -> r.Id)
-                |> List.traverseTaskResultM (addRecipient env idea.Id)
-            ()
-        | NoRecipient -> ()
+        printfn "Idea: %A" ideaInput
 
-        return result
+        return! env.db.execute sql ideaInput
     }

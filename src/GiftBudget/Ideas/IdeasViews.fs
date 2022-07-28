@@ -1,6 +1,7 @@
 ﻿module Ideas.Views
 
 open Giraffe.ViewEngine
+open Giraffe.Htmx
 open Saturn
 
 let ideaLink url =
@@ -63,7 +64,55 @@ let ideaDetail ctx idea =
             span [] []
     ]
 
-let addEditIdea ctx (maybeIdea: Idea option) (input: IdeaInput option) (errors: Map<string, string>) =
+let addEditIdea ctx (maybeIdea: Idea option) (maybeInput: IdeaInput option) (errors: Map<string, string>) =
     App.template ctx [
-        
+        div [] [
+            h1 [_class "title"] [
+                match maybeIdea with
+                | Some _ -> str "Edit Idea"
+                | None -> str "Add Idea"
+            ]
+            form [_action "/ideas"; _method "post"] [
+                div [_class "field"] [
+                    label [_class "label"] [str "Idea"]
+                    div [_class "control"] [
+                        input
+                            [ _class "input"
+                              _type "text"
+                              _name "text"
+                              _placeholder "Socks" ]
+                    ]
+                ]
+                div [_class "field"] [
+                    label [_class "label"] [str "Price"]
+                    div [_class "control"] [
+                        input
+                            [ _class "input"
+                              _type "number"
+                              _step "0.01"
+                              _name "price" ]
+                    ]
+                ]
+                div [_class "field"] [
+                    label [_class "label"] [str "Link"]
+                    div [_class "control"] [
+                        input
+                            [ _class "input"
+                              _type "text"
+                              _name "link"
+                              _placeholder "Socks"]
+                    ]
+                ]
+                div [_class "field is-grouped"] [
+                    div [_class "control"] [
+                        button [_class "button is-link"; _type "submit"] [str "Save"]
+                    ]
+                    div [_class "control"] [
+                        match ctx.Request.IsHtmx with
+                        | false -> a [_class "button is-link is-light"; _href (Links.index ctx)] [str "Cancel"]
+                        | true -> button [_class "exit-modal button is-light"; _type "button"] [str "Cancel"]
+                    ]
+                ]
+            ]
+        ]
     ]

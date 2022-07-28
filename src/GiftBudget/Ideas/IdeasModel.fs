@@ -46,33 +46,24 @@ module Validation =
                 | None -> acc)
             Map.empty
 
-type private RecipientsFunc = Guid list -> Task<Result<Recipient list, exn>>
+type private RecipientsFunc = Guid array -> Task<Result<Recipient list, exn>>
 
 [<CLIMutable>]
 type IdeaInput =
     { text: string
       price: decimal option
-      link: string option
-      recipients: Guid list }
+      link: string option }
 
     interface IIdea with
         member this.Text = this.text
 
-    member this.toIdea (r: RecipientsFunc) userId =
-        taskResult {
-            let! recipients = r this.recipients
-
-            return
-                { Id = Guid.NewGuid ()
-                  UserId = userId
-                  Text = this.text
-                  Price = this.price
-                  Link = this.link
-                  Recipient =
-                    match recipients with
-                    | [] -> NoRecipient
-                    | [ recipient ] -> IdeaRecipient recipient
-                    | _ -> IdeaRecipients recipients
-                  CreatedOn = DateTime.Now
-                  UpdatedOn = DateTime.Now }
-        }        
+    member this.toIdea userId =            
+        { Id = Guid.NewGuid ()
+          UserId = userId
+          Text = this.text
+          Price = this.price
+          Link = this.link
+          Recipient = NoRecipient
+          CreatedOn = DateTime.Now
+          UpdatedOn = DateTime.Now }
+             

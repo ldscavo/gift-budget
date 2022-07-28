@@ -44,14 +44,14 @@ let private createIdea env ctx =
         
         if validationResult.IsEmpty then
             let! result =
-                input.toIdea (Recipients.Repository.getByIds env) ctx.UserId
-                |> TaskResult.bind (Repository.insert env)
+                input.toIdea ctx.UserId
+                |> Repository.insert env
 
             match result with
             | Ok _ ->
                 return! Controller.redirect ctx "/ideas"
-            | Error _ ->
-                let view = Views.addEditIdea ctx None (Some input) Map.empty
+            | Error ex ->
+                let view = InternalError.layout ex
                 return! Controller.renderHtml ctx view
         else
             let view = Views.addEditIdea ctx None (Some input) validationResult

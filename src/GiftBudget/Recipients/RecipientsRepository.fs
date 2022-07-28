@@ -73,7 +73,7 @@ let getById (env: #IDb) (id: Guid) =
         return recipients |> Option.map toRecipient
     }
 
-let getByIds (env: #IDb) (ids: Guid list) =
+let getByIds (env: #IDb) (ids: Guid array) =
     taskResult {
         let sql = """
             SELECT id, user_id, name, notes, created_on, updated_on
