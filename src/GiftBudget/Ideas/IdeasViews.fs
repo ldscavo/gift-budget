@@ -4,20 +4,20 @@ open Giraffe.ViewEngine
 open Giraffe.Htmx
 open Saturn
 
-let ideaLink url =
+let ideaLink text url =
     span [_class "icon-text"] [
-        a [_href url; _target "_blank"] [
-            span [_class "icon "] [ i [_class "fas fa-link"] [] ]
+        span [] [str text]
+        a [_class "icon"; _href url; _target "_blank"] [
+            i [_class "fas fa-link"] []
         ]
     ]
 
 let ideaRow ctx idea =
     tr [] [
         td [] [
-            str idea.Text
             match idea.Link with
-            | Some linkUrl -> ideaLink linkUrl
-            | None -> span [] []
+            | Some linkUrl -> ideaLink idea.Text linkUrl
+            | None -> str idea.Text
         ]
         td [] [
             match idea.Price with
