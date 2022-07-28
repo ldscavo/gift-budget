@@ -12,6 +12,7 @@
     <Compile Include="Templates\Index.fs" />
     <Compile Include="Templates\NotFound.fs" />
     <Compile Include="Templates\InternalError.fs" />
+    <Compile Include="Templates\Components.fs" />
 
     <Compile Include="Users\UsersModel.fs" />
     <Compile Include="Users\UsersRepository.fs" />
