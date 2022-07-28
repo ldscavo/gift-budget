@@ -13,8 +13,8 @@ var addListeners = () => {
         modalLink.addEventListener('htmx:afterOnLoad', openModal);
     });
 
-    document.querySelectorAll(".exit-modal").forEach(close => {
-        close.addEventListener("click", closeModal);
+    document.querySelectorAll(".exit-modal").forEach(closeModalLink => {
+        closeModalLink.addEventListener("click", closeModal);
     });
 
     document.getElementById("modal-background").addEventListener("click", closeModal);
