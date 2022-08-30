@@ -35,16 +35,11 @@ let loggedInRouter env =
         forward "/ideas" (Ideas.Controller.resource env)
     }
 
-let browserRouter env =
+let appRouter env =
     router {
         not_found_handler (htmlView NotFound.layout) //Use the default 404 webpage
         pipe_through browser //Use the default browser pipeline
     
         forward "" (defaultView env) //Use the default view    
         forward "" (loggedInRouter env)
-    }
-
-let appRouter env =
-    router {
-        forward "" (browserRouter env)
     }
