@@ -18,7 +18,8 @@ let connString conn =
             Port = uri.Port,
             Username = userInfo.[0],
             Password = userInfo.[1],
-            Database = database
+            Database = database,
+            IncludeErrorDetail = true
         )
 
         Some (builder.ToString())
