@@ -13,7 +13,6 @@ let endpointPipe =
     }
 
 let app =
-    let port = Env.get "PORT" ??- "8085"
     let connectionString =
         Env.unsafeGet "DATABASE_URL"
         |> Shared.Database.connString
@@ -29,15 +28,14 @@ let app =
 
     application {
         pipe_through endpointPipe
-
         error_handler (fun ex _ -> pipeline { render_html (InternalError.layout ex) })
         use_router (Router.appRouter env)
-        url (sprintf "http://0.0.0.0:%s/" port)
         memory_cache
         use_static "static"
         use_gzip
         use_config (fun _ -> { connectionString = connectionString })
-        use_cookies_authentication_with_config authOptions     
+        use_cookies_authentication_with_config authOptions
+        use_iis
     }
 
 [<EntryPoint>]
