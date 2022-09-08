@@ -25,11 +25,13 @@ let recipientCard ctx recipient =
                 a [_class "card-footer-item"; _href (Links.withId ctx recipient.Id)] [
                     span [_class "icon"] [ i [_class "fas fa-user"] [] ]
                     str "Details"
-                ]
-                a [_class "card-footer-item"; _href "#"] [
-                    span [_class "icon"] [
-                        i [_class "fas fa-lightbulb"] []
-                        i [_class "fas fa-plus"] []
+                ]                
+                div [_class "card-footer-item"] [
+                    Components.modalLink $"/ideas/add?forid={recipient.Id}&forname={recipient.Name}" [
+                        span [_class "icon"] [
+                            i [_class "fas fa-lightbulb"] []
+                            i [_class "fas fa-plus"] []
+                        ]
                     ]
                 ]
             ]

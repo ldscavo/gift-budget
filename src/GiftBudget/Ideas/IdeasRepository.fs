@@ -120,7 +120,7 @@ let addRecipient (env: #IDb) ideaId recipientId =
         return ()
     }
 
-let insert (env: #IDb) idea =
+let insert (env: #IDb) (idea: Idea) =
     taskResult {
         let sql = """
             INSERT INTO ideas
@@ -129,9 +129,15 @@ let insert (env: #IDb) idea =
                 (@id, @user_id, @text, @price, @link, @created_on, @updated_on)
         """
 
-        let ideaInput = idea |> fromIdea
+        let! result =
+            idea
+            |> fromIdea
+            |> env.db.execute sql
 
-        printfn "Idea: %A" ideaInput
-
-        return! env.db.execute sql ideaInput
+        do!
+            match idea.Recipient with
+            | IdeaRecipient recipient -> addRecipient env idea.Id recipient.Id
+            | _ -> Ok () |> Task.FromResult
+                    
+        return result
     }

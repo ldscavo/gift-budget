@@ -51,19 +51,33 @@ type private RecipientsFunc = Guid array -> Task<Result<Recipient list, exn>>
 [<CLIMutable>]
 type IdeaInput =
     { text: string
+      recipient: Guid option
       price: decimal option
       link: string option }
 
     interface IIdea with
         member this.Text = this.text
 
-    member this.toIdea userId =            
-        { Id = Guid.NewGuid ()
-          UserId = userId
-          Text = this.text
-          Price = this.price
-          Link = this.link
-          Recipient = NoRecipient
-          CreatedOn = DateTime.Now
-          UpdatedOn = DateTime.Now }
-             
+    member this.toIdea userId (recipientFunc: Guid -> Task<Result<Recipient option, exn>>) =
+        taskResult {
+            let! recipient = 
+                this.recipient
+                |> Option.map recipientFunc
+                |> Option.defaultValue (Ok None |> Task.FromResult)
+
+            return
+               { Id = Guid.NewGuid ()
+                 UserId = userId
+                 Text = this.text
+                 Price = this.price
+                 Link = this.link
+                 Recipient =
+                     match recipient with
+                     | Some r -> IdeaRecipient r
+                     | None -> NoRecipient
+                 CreatedOn = DateTime.Now
+                 UpdatedOn = DateTime.Now } 
+        }
+        
+[<CLIMutable>]
+type RecipientQuery = { ForId: Guid option; ForName: string option }

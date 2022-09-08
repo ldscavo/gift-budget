@@ -3,6 +3,7 @@
 open Giraffe.ViewEngine
 open Giraffe.Htmx
 open Saturn
+open Ideas
 
 let ideaLink text url =
     span [_class "icon-text"] [
@@ -64,7 +65,7 @@ let ideaDetail ctx idea =
             span [] []
     ]
 
-let addEditIdea ctx (maybeIdea: Idea option) (maybeInput: IdeaInput option) (errors: Map<string, string>) =
+let addEditIdea ctx (maybeIdea: Idea option) (maybeInput: IdeaInput option) (maybeRecipient: RecipientQuery) (errors: Map<string, string>) =
     App.template ctx [
         div [] [
             h1 [_class "title"] [
@@ -83,6 +84,20 @@ let addEditIdea ctx (maybeIdea: Idea option) (maybeInput: IdeaInput option) (err
                               _placeholder "Socks" ]
                     ]
                 ]
+                match maybeRecipient.ForId with
+                | Some id ->
+                    div [_class "field"] [
+                        label [_class "label"] [str "For"]
+                        div [_class "control"] [
+                            span [] [str (maybeRecipient.ForName |> Option.defaultValue "")]
+                            input
+                                [ _type "hidden"
+                                  _value (id.ToString ())
+                                  _name "recipient" ]
+                        ]
+                    ]
+                | None ->
+                    span [] []
                 div [_class "field"] [
                     label [_class "label"] [str "Price"]
                     div [_class "control"] [

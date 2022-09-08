@@ -5,6 +5,7 @@ open Saturn
 open Ideas
 open FsToolkit.ErrorHandling
 open Microsoft.AspNetCore.Http
+open System
 
 let private showIdeaList env (ctx: HttpContext) =
     task {
@@ -33,7 +34,8 @@ let private showIdeaDetail env ctx id =
 
 let private addIdea ctx =
     task {
-        let view = Views.addEditIdea ctx None None Map.empty
+        let query = Controller.getQuery<RecipientQuery> ctx
+        let view = Views.addEditIdea ctx None None query Map.empty
         return! Controller.renderHtml ctx view
     }
 
@@ -44,8 +46,8 @@ let private createIdea env ctx =
         
         if validationResult.IsEmpty then
             let! result =
-                input.toIdea ctx.UserId
-                |> Repository.insert env
+                input.toIdea ctx.UserId (Recipients.Repository.getById env)
+                |> TaskResult.bind (Repository.insert env)
 
             match result with
             | Ok _ ->
@@ -54,7 +56,7 @@ let private createIdea env ctx =
                 let view = InternalError.layout ex
                 return! Controller.renderHtml ctx view
         else
-            let view = Views.addEditIdea ctx None (Some input) validationResult
+            let view = Views.addEditIdea ctx None (Some input) {ForId = None; ForName = None} validationResult
             return! Controller.renderHtml ctx view                
     }
 
