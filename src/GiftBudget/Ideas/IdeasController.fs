@@ -32,10 +32,15 @@ let private showIdeaDetail env ctx id =
         return! Controller.renderHtml ctx view
     }
 
-let private addIdea ctx =
+let private addIdea env ctx =
     task {
         let query = Controller.getQuery<RecipientQuery> ctx
-        let view = Views.addEditIdea ctx None None query Map.empty
+
+        let! recipients =
+            Recipients.Repository.getAllForUser env ctx.UserId
+            |> TaskResult.defaultValue []
+
+        let view = Views.addEditIdea ctx None None query recipients Map.empty
         return! Controller.renderHtml ctx view
     }
 
@@ -56,7 +61,11 @@ let private createIdea env ctx =
                 let view = InternalError.layout ex
                 return! Controller.renderHtml ctx view
         else
-            let view = Views.addEditIdea ctx None (Some input) {ForId = None; ForName = None} validationResult
+            let! recipients =
+                Recipients.Repository.getAllForUser env ctx.UserId
+                |> TaskResult.defaultValue []
+
+            let view = Views.addEditIdea ctx None (Some input) {ForId = None; ForName = None} recipients validationResult
             return! Controller.renderHtml ctx view                
     }
 
@@ -64,6 +73,6 @@ let resource env =
     controller {
         index (showIdeaList env)
         show (showIdeaDetail env)
-        add addIdea
+        add (addIdea env)
         create (createIdea env)
     }

@@ -4,6 +4,7 @@ open Giraffe.ViewEngine
 open Giraffe.Htmx
 open Saturn
 open Ideas
+open Recipients
 
 let ideaLink text url =
     span [_class "icon-text"] [
@@ -65,7 +66,7 @@ let ideaDetail ctx idea =
             span [] []
     ]
 
-let addEditIdea ctx (maybeIdea: Idea option) (maybeInput: IdeaInput option) (maybeRecipient: RecipientQuery) (errors: Map<string, string>) =
+let addEditIdea ctx maybeIdea (maybeInput: IdeaInput option) maybeRecipient (recipients: Recipient list) (errors: Map<string, string>) =
     App.template ctx [
         div [] [
             h1 [_class "title"] [
@@ -84,20 +85,18 @@ let addEditIdea ctx (maybeIdea: Idea option) (maybeInput: IdeaInput option) (may
                               _placeholder "Socks" ]
                     ]
                 ]
-                match maybeRecipient.ForId with
-                | Some id ->
+                if (recipients |> List.isEmpty |> not) then
                     div [_class "field"] [
                         label [_class "label"] [str "For"]
-                        div [_class "control"] [
-                            span [] [str (maybeRecipient.ForName |> Option.defaultValue "")]
-                            input
-                                [ _type "hidden"
-                                  _value (id.ToString ())
-                                  _name "recipient" ]
-                        ]
+                        div [_class "select"] [
+                            select [_name "recipient"]
+                                (recipients |> List.map (fun r ->
+                                    option [
+                                        _value (r.Id.ToString())
+                                        if (maybeRecipient.ForId |> Option.map ((=) r.Id) |> Option.defaultValue false) then _selected
+                                    ] [str r.Name])) 
+                        ]                                               
                     ]
-                | None ->
-                    span [] []
                 div [_class "field"] [
                     label [_class "label"] [str "Price"]
                     div [_class "control"] [
