@@ -8,11 +8,6 @@ open FsToolkit.ErrorHandling
 type IIdea =
     abstract Text: string
 
-type IdeaRecipient =
-    | IdeaRecipient of Recipient
-    | IdeaRecipients of Recipient list
-    | NoRecipient
-
 [<CLIMutable>]
 type Idea =
     { Id: Guid
@@ -20,7 +15,7 @@ type Idea =
       Text: string
       Price: decimal option
       Link: string option
-      Recipient: IdeaRecipient
+      Recipient: Recipient list
       CreatedOn: DateTime
       UpdatedOn: DateTime }
 
@@ -73,8 +68,8 @@ type IdeaInput =
                  Link = this.link
                  Recipient =
                      match recipient with
-                     | Some r -> IdeaRecipient r
-                     | None -> NoRecipient
+                     | Some r -> [r]
+                     | None -> []
                  CreatedOn = DateTime.Now
                  UpdatedOn = DateTime.Now } 
         }

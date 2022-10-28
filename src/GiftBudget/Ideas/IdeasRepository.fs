@@ -4,6 +4,7 @@ open System
 open Database
 open System.Threading.Tasks
 open FsToolkit.ErrorHandling
+open FSharpPlus
 
 [<CLIMutable>]
 type IdeaDataEntity =
@@ -15,12 +16,6 @@ type IdeaDataEntity =
       created_on: DateTime
       updated_on: DateTime }
 
-let toIdeaRecipients recipients =
-    match recipients with
-    | [] -> NoRecipient
-    | [recipient] -> IdeaRecipient recipient
-    | _ -> IdeaRecipients recipients
-
 let toIdea i =
     { Id = i.id
       UserId = i.user_id
@@ -30,7 +25,7 @@ let toIdea i =
           match String.IsNullOrWhiteSpace i.link with
           | false -> Some i.link
           | true -> None
-      Recipient = NoRecipient
+      Recipient = []
       CreatedOn = i.created_on
       UpdatedOn = i.updated_on }
 
@@ -53,7 +48,7 @@ let getRecipientsForIdea (env: #IDb) (idea: Idea) =
 
         return
             { idea with
-                Recipient = recipients |> toIdeaRecipients }
+                Recipient = recipients }
     }
 
 let getRecipientsForIdeaOption (env: #IDb) (idea: Idea) =
@@ -135,9 +130,10 @@ let insert (env: #IDb) (idea: Idea) =
             |> env.db.execute sql
 
         do!
-            match idea.Recipient with
-            | IdeaRecipient recipient -> addRecipient env idea.Id recipient.Id
-            | _ -> Ok () |> Task.FromResult
-                    
+            idea.Recipient
+            |> List.map (fun r -> addRecipient env idea.Id r.Id)
+            |> Task.WhenAll
+            |> Task.ignore
+                                
         return result
     }

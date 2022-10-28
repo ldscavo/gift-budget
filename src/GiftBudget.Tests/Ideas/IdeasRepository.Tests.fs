@@ -61,7 +61,7 @@ let tests = testList "Idea database model mapping tests" [
         let idea =
             { Id = Guid.NewGuid()
               UserId = Guid.NewGuid ()
-              Recipient = NoRecipient
+              Recipient = []
               Text = "A new hirto-undicovered variety of cabbage"
               Price = Some 1.99m
               Link = Some "https://my-cabbages.atla"
@@ -105,42 +105,5 @@ let tests = testList "Idea database model mapping tests" [
         testCase "UpdatedOn maps to domain Updated_on" <| fun _ ->
             let ideaDb = fromIdea idea
             Expect.equal idea.UpdatedOn ideaDb.updated_on "Updated dates match"
-    ]
-
-    testList "Idea recipient matching tests" [
-        let newRecipient () =
-            { Id = Guid.NewGuid ()
-              UserId = Guid.NewGuid ()
-              Name = "John Doe"
-              Notes = Some "He really really like pineapples for some reason"
-              CreatedOn = DateTime.Now
-              UpdatedOn = DateTime.Now }
-
-        let idea =
-            { Id = Guid.NewGuid()
-              UserId = Guid.NewGuid ()
-              Recipient = NoRecipient
-              Text = "A new hirto-undicovered variety of cabbage"
-              Price = Some 1.99m
-              Link = Some "https://my-cabbages.atla"
-              CreatedOn = DateTime.Now
-              UpdatedOn = DateTime.Now }
-                
-        testCase "Empty list maps to NoRecipient" <| fun _ ->
-            let ideaRecipient = [] |> toIdeaRecipients
-
-            Expect.equal ideaRecipient NoRecipient "No recipients from empty list"
-
-        testCase "List of one maps to IdeaRecipient" <| fun _ ->
-            let recipient = newRecipient ()
-            let ideaRecipient = [recipient] |> toIdeaRecipients
-
-            Expect.equal ideaRecipient (IdeaRecipient recipient) "IdeaRecipient from list of one"
-
-        testCase "List of many maps to IdeaRecipients" <| fun _ ->
-            let recipients = [ (newRecipient ()) ; (newRecipient ()) ]
-            let ideaRecipient = recipients |> toIdeaRecipients
-
-            Expect.equal ideaRecipient (IdeaRecipients recipients) "IdeaRecipients from list of many"
-    ]
+    ]    
 ]
