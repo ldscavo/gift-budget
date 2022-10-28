@@ -1,8 +1,10 @@
 module Router
 
 open Saturn
-open Giraffe.Core
-open Microsoft.AspNetCore.Authentication.Cookies
+open Giraffe
+open Microsoft.AspNetCore.Http
+open Users
+open FSharpPlus
 
 let browser =
     pipeline {
@@ -11,9 +13,18 @@ let browser =
         set_header "x-pipeline-type" "Browser"
     }
 
+let redirectOnLoggedOut next (ctx: HttpContext) =
+    let redirect = ctx.GetRequestUrl ()
+
+    ctx.SetHttpHeader("HX-Redirect", $"/login?redirectUrl={redirect}")
+    ctx.SetStatusCode 200    
+
+    Users.Views.login ctx None Map.empty (Some redirect)
+    |> Controller.renderHtml ctx
+
 let requires_login =
     pipeline {
-        requires_authentication (Giraffe.Auth.challenge CookieAuthenticationDefaults.AuthenticationScheme)    
+        requires_authentication redirectOnLoggedOut  
     }
 
 let defaultView env =
