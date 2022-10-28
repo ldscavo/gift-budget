@@ -10,7 +10,7 @@ let idea =
       Text = "A shiny new pineapple for someone"
       Price = Some 19.99m
       Link = None
-      Recipient = []
+      Recipients = []
       CreatedOn = DateTime.Now
       UpdatedOn = DateTime.Now }
 

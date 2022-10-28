@@ -15,7 +15,7 @@ type Idea =
       Text: string
       Price: decimal option
       Link: string option
-      Recipient: Recipient list
+      Recipients: Recipient list
       CreatedOn: DateTime
       UpdatedOn: DateTime }
 
@@ -41,8 +41,6 @@ module Validation =
                 | None -> acc)
             Map.empty
 
-type private RecipientsFunc = Guid array -> Task<Result<Recipient list, exn>>
-
 [<CLIMutable>]
 type IdeaInput =
     { text: string
@@ -66,7 +64,7 @@ type IdeaInput =
                  Text = this.text
                  Price = this.price
                  Link = this.link
-                 Recipient =
+                 Recipients =
                      match recipient with
                      | Some r -> [r]
                      | None -> []

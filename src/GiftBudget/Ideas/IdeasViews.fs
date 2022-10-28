@@ -27,7 +27,7 @@ let ideaRow ctx idea =
             | None -> str ""
         ]
         td [] [
-            str (idea.Recipient |> List.map (fun r -> r.Name) |> String.concat ", ")
+            str (idea.Recipients |> List.map (fun r -> r.Name) |> String.concat ", ")
         ]
     ]
 
@@ -54,7 +54,7 @@ let ideasList ctx ideas =
 let ideaDetail ctx idea =
     App.template ctx [
         h1 [_class "title"] [str idea.Text]
-        div [] (idea.Recipient |> List.map (fun r -> p [] [str r.Name]))
+        div [] (idea.Recipients |> List.map (fun r -> p [] [str r.Name]))
     ]
 
 let addEditIdea ctx maybeIdea (maybeInput: IdeaInput option) maybeRecipient (recipients: Recipient list) (errors: Map<string, string>) =

@@ -25,7 +25,7 @@ let toIdea i =
           match String.IsNullOrWhiteSpace i.link with
           | false -> Some i.link
           | true -> None
-      Recipient = []
+      Recipients = []
       CreatedOn = i.created_on
       UpdatedOn = i.updated_on }
 
@@ -48,7 +48,7 @@ let getRecipientsForIdea (env: #IDb) (idea: Idea) =
 
         return
             { idea with
-                Recipient = recipients }
+                Recipients = recipients }
     }
 
 let getRecipientsForIdeaOption (env: #IDb) (idea: Idea) =
@@ -130,7 +130,7 @@ let insert (env: #IDb) (idea: Idea) =
             |> env.db.execute sql
 
         do!
-            idea.Recipient
+            idea.Recipients
             |> List.map (fun r -> addRecipient env idea.Id r.Id)
             |> Task.WhenAll
             |> Task.ignore
