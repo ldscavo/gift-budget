@@ -7,6 +7,8 @@ open Microsoft.AspNetCore.Http
 open FSharp.Control.Tasks
 open Saturn
 open Recipients
+open FsToolkit.ErrorHandling
+open System.Threading.Tasks
 
 let private showRecipientList env (ctx: HttpContext) =
     task {
@@ -20,13 +22,27 @@ let private showRecipientList env (ctx: HttpContext) =
             return! Controller.renderHtml ctx (InternalError.layout ex)           
     }
 
+let private getIdeaListForRecipient env (maybeRecipient: Result<Recipient option, exn>) =
+    taskResult {
+        let! recipient = maybeRecipient |> Task.FromResult
+        
+        let! ideas =
+            match recipient with
+            | Some r -> r.Id |> Ideas.Repository.getAllForRecipient env
+            | None -> Ok [] |> Task.FromResult
+
+        return ideas
+    }
+
 let private detail env (ctx: HttpContext) (id: Guid) =
     task {
         let! maybeRecipient = Repository.getById env id
+        let! ideas = maybeRecipient |> getIdeaListForRecipient env |> TaskResult.defaultValue []
 
         let view = 
             match maybeRecipient with
-            | Ok (Some recipient) -> Views.recipientDetail ctx recipient
+            | Ok (Some recipient) ->                
+                Views.recipientDetail ctx recipient ideas
             | Ok None -> NotFound.layout
             | Error ex -> InternalError.layout ex
 

@@ -5,6 +5,7 @@ open Giraffe.ViewEngine.Htmx
 open Giraffe.Htmx
 open Saturn
 open Recipients
+open Ideas
 
 let recipientCard ctx recipient =
     div [_class "column is-narrow"] [
@@ -54,12 +55,17 @@ let recipientsList ctx recipients =
             | _ -> recipients |> List.map (recipientCard ctx) 
     ]
 
-let recipientDetail ctx recipient =
+let recipientDetail ctx recipient (ideas: Idea list) =
     App.template ctx [
         h1 [_class "title"] [str recipient.Name]
         match recipient.Notes with
         | Some notes -> p [] [str notes]
         | None -> span [] []
+
+        if (ideas |> List.length) > 0 then
+            nav [_class "panel"] <|
+                [ p [_class "panel-heading"] [str "Ideas"] ]
+                    @ (ideas |> List.map (fun idea -> div [_class "panel-block"] [str idea.Text]))            
     ]
 
 let addEditRecipient ctx maybeRecipient maybeInput errors =
@@ -89,8 +95,7 @@ let addEditRecipient ctx maybeRecipient maybeInput errors =
                               _value vals.name ]
                     ]
                     if Map.containsKey "name" errors then
-                        p [ _class "help is-danger" ] [ str errors.["name"] ]
-                    else span [] []
+                        p [ _class "help is-danger" ] [ str errors.["name"] ]                    
                 ]
                 div [_class "field"] [
                     label [_class "label"] [str "Notes*"]

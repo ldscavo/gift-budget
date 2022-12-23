@@ -13,20 +13,19 @@
     <Compile Include="Templates\NotFound.fs" />
     <Compile Include="Templates\InternalError.fs" />
     <Compile Include="Templates\Components.fs" />
-
-    <Compile Include="Users\UsersModel.fs" />
-    <Compile Include="Users\UsersRepository.fs" />
-    <Compile Include="Users\UsersService.fs" />
-    <Compile Include="Users\UsersViews.fs" />
-    <Compile Include="Users\UsersController.fs" />
-    <Compile Include="Recipients\RecipientsModel.fs" />
-    <Compile Include="Recipients\RecipientsRepository.fs" />
-    <Compile Include="Recipients\RecipientsViews.fs" />
-    <Compile Include="Recipients\RecipientsController.fs" />
-    <Compile Include="Ideas\IdeasModel.fs" />
-    <Compile Include="Ideas\IdeasRepository.fs" />
-    <Compile Include="Ideas\IdeasViews.fs" />
-    <Compile Include="Ideas\IdeasController.fs" />
+    <Compile Include="Models\UsersModel.fs" />
+    <Compile Include="Models\RecipientsModel.fs" />
+    <Compile Include="Models\IdeasModel.fs" />
+    <Compile Include="Respositories\UsersRepository.fs" />
+    <Compile Include="Respositories\RecipientsRepository.fs" />
+    <Compile Include="Respositories\IdeasRepository.fs" />
+    <Compile Include="Services\UsersService.fs" />
+    <Compile Include="Views\UsersViews.fs" />
+    <Compile Include="Views\RecipientsViews.fs" />
+    <Compile Include="Views\IdeasViews.fs" />
+    <Compile Include="Controllers\UsersController.fs" />
+    <Compile Include="Controllers\RecipientsController.fs" />
+    <Compile Include="Controllers\IdeasController.fs" />
     <Compile Include="Router.fs" />
     <Compile Include="Program.fs" />
 
