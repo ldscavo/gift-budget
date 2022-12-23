@@ -33,7 +33,7 @@ let layout content =
         body [_hxBoost; _hxTarget "#container"] [
             nav [_id "nav"; _class "navbar"] [
                 div [_class "navbar-brand"] [
-                    a [_class "navbar-item"; _href "/"] [
+                    a [_class "navbar-item"; _href "/"; _hxNoBoost] [
                         img [_src "/logo.png"]
                         str "Gift Budget"
                     ]
