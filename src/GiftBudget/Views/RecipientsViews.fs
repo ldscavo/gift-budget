@@ -51,7 +51,7 @@ let recipientsList ctx recipients =
         ]
         div [_class "columns is-multiline"] <|
             match recipients with
-            | [] -> [ div [] [str "You've not added any recipients yet!"] ]
+            | [] -> [ div [] [str "You've not added any recipients yet! Press the plus sign above to get started!"] ]
             | _ -> recipients |> List.map (recipientCard ctx) 
     ]
 

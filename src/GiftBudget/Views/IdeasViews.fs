@@ -41,14 +41,17 @@ let ideasList ctx ideas =
                 ]
             ]
         ]
-        table [_class "table"] [
-            thead [] [
-                th [] [str "Idea"]
-                th [] [str "Price"]
-                th [] [str "Recipient"]
+        if (ideas |> List.length) > 0 then
+            table [_class "table"] [
+                thead [] [
+                    th [] [str "Idea"]
+                    th [] [str "Price"]
+                    th [] [str "Recipient"]
+                ]
+                tbody [] (ideas |> List.map (ideaRow ctx))        
             ]
-            tbody [] (ideas |> List.map (ideaRow ctx))
-        ]
+        else
+            div [] [str "You haven't added any Ideas yet! Press the plus sign above to get started!"]
     ]
     
 let ideaDetail ctx idea =
