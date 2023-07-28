@@ -16,6 +16,7 @@
     <Compile Include="Models\UsersModel.fs" />
     <Compile Include="Models\RecipientsModel.fs" />
     <Compile Include="Models\IdeasModel.fs" />
+    <Compile Include="Models\BudgetsModel.fs" />
     <Compile Include="Respositories\UsersRepository.fs" />
     <Compile Include="Respositories\RecipientsRepository.fs" />
     <Compile Include="Respositories\IdeasRepository.fs" />
